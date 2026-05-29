@@ -8,7 +8,7 @@ Future<void> main() async {
 
   runApp(
       ChangeNotifierProvider(
-        create: (context) => SpotifyService(),
+        create: (context) => SpotifyService()..checkAutoConnect(),
         child: const MyApp(),
       )
   );

@@ -54,7 +54,17 @@ class SpotifyAuthWidget extends StatelessWidget {
             )
           else
             ElevatedButton(
-              onPressed: () => context.read<SpotifyService>().disconnect(),
+              onPressed: () async {
+                final errorMessage = await context.read<SpotifyService>().disconnect();
+                
+                if(!context.mounted) return;
+                
+                if(errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Error: $errorMessage"))
+                  );
+                }
+              },
               child: const Text('Disconnect Spotify'),
             ),
         ],

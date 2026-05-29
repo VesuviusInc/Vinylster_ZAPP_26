@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
 class SpotifyService extends ChangeNotifier {
@@ -25,8 +26,10 @@ class SpotifyService extends ChangeNotifier {
         redirectUrl: redirectUri,
       );
 
-      notifyListeners();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool("spotify_auto_connect", true);
 
+      notifyListeners();
       return null;
     } on PlatformException catch (e) {
       // mostly exceptions related to the spotify-sdk
@@ -72,10 +75,23 @@ class SpotifyService extends ChangeNotifier {
       await SpotifySdk.disconnect();
       _isConnected = false;
       _accessToken = null;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool("spotify_auto_connect", false);
+
       notifyListeners();
       return null;
     } catch (e) {
       return "Error while disconnecting: $e";
+    }
+  }
+
+  Future<void> checkAutoConnect() async {
+    final prefs = await SharedPreferences.getInstance();
+    final shouldAutoConnect = prefs.getBool("spotify_auto_connect") ?? false;
+
+    if (shouldAutoConnect) {
+      await connectToSpotify();
     }
   }
 }
