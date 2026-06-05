@@ -46,7 +46,7 @@ class SpotifyAuthWidget extends StatelessWidget {
 
                 if (errorMessage != null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Error: $errorMessage"))
+                    SnackBar(content: Text("Error: $errorMessage")),
                   );
                 }
               },
@@ -55,13 +55,15 @@ class SpotifyAuthWidget extends StatelessWidget {
           else
             ElevatedButton(
               onPressed: () async {
-                final errorMessage = await context.read<SpotifyService>().disconnect();
-                
-                if(!context.mounted) return;
-                
-                if(errorMessage != null) {
+                final errorMessage = await context
+                    .read<SpotifyService>()
+                    .disconnect();
+
+                if (!context.mounted) return;
+
+                if (errorMessage != null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Error: $errorMessage"))
+                    SnackBar(content: Text("Error: $errorMessage")),
                   );
                 }
               },
