@@ -1,18 +1,33 @@
 class Track {
-  final String _trackId;
-  final String _name;
-  final List<String> _artists;
+  String _trackId;
+  String _name;
+  List<String> _artists;
+  int _releaseYear;
 
-  Track(this._trackId, this._name, this._artists);
-
-  List<String> get artists => _artists;
-
-  String get title => _name;
+  Track({
+    required String trackId,
+    required String name,
+    required List<String> artists,
+    required int releaseYear,
+  }) : _trackId = trackId,
+       _name = name,
+       _artists = artists,
+       _releaseYear = releaseYear {
+    if (_releaseYear < 1000 || _releaseYear > 9999) {
+      throw ArgumentError("The release year must be between 1000 - 9999");
+    }
+  }
 
   String get trackId => _trackId;
 
+  String get name => _name;
+
+  List<String> get artists => _artists;
+
+  int get releaseYear => _releaseYear;
+
   @override
   String toString() {
-    return 'Track{TrackId: $_trackId, Title: $_name, Artists: $_artists}';
+    return 'Track{TrackId: $_trackId, Title: $_name, Artists: $_artists, ReleaseYear: $_releaseYear}';
   }
 }
