@@ -230,7 +230,7 @@ class SpotifyService extends ChangeNotifier {
     _cachedTracks.remove(_currentTrack);
 
     _logger.i(
-      "currentTrack: ${_currentTrack == null ? "null" : _currentTrack!.title}",
+      "currentTrack: ${_currentTrack == null ? "null" : _currentTrack!.name}",
     );
     notifyListeners();
   }
@@ -257,7 +257,7 @@ class SpotifyService extends ChangeNotifier {
     }
     try {
       final url = Uri.parse(
-        "https://api.spotify.com/v1/playlists/$_playlistId/items?offset=$_cachedTimes&limit=$limit",
+        "https://api.spotify.com/v1/playlists/$_playlistId/items?offset=$offset&limit=$limit",
       );
       final response = await http.get(
         url,
@@ -267,15 +267,15 @@ class SpotifyService extends ChangeNotifier {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final List tracksJson = data["items"];
-
         for (final track in tracksJson) {
           String trackName = track["item"]["name"];
           String trackId = track["item"]["id"];
           List<String> artists = [];
+          int releaseYear = _getReleaseYearFromString(track["item"]["album"]["release_date"]);
           for (final artist in track["item"]["artists"]) {
             artists.add(artist["name"]);
           }
-          Track newTrack = Track(trackId, trackName, artists);
+          Track newTrack = Track(trackId: trackId, name: trackName, artists: artists, releaseYear: releaseYear);
           tracks.add(newTrack);
         }
       }
@@ -436,5 +436,9 @@ class SpotifyService extends ChangeNotifier {
     _timer?.cancel();
     _stopwatch.stop();
     _remainingMilliseconds = SpotifyService.songPreviewLengthSeconds * 1000;
+  }
+
+  int _getReleaseYearFromString(String releaseYear) {
+    return int.parse(releaseYear.substring(0, 4));
   }
 }
