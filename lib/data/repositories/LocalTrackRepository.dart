@@ -1,6 +1,8 @@
+import 'package:vinylster_zapp_26/data/repositories/TrackRepository.dart';
+
 import '../models/Track.dart';
 
-class TrackDataRepository {
+class LocalTrackRepository implements TrackRepository {
   // the releaseYear of these tracks has been manually checked and should be correct (differences might appear single/album releases)
   static final Map<String, Track> _trackDatabase = {
     "59VR9MekNIMRLxQYfSn3Qr": Track(
@@ -575,7 +577,7 @@ class TrackDataRepository {
     "4BFMQ15vXr626UOoZL8bUI": Track(
       trackId: "4BFMQ15vXr626UOoZL8bUI",
       name:
-          "(I've Had) The Time of My Life - From \"Dirty Dancing\" Soundtrack",
+      "(I've Had) The Time of My Life - From \"Dirty Dancing\" Soundtrack",
       artists: ["Bill Medley", "Jennifer Warnes"],
       releaseYear: 1987,
     ),
@@ -822,7 +824,7 @@ class TrackDataRepository {
     "6dHTkQYY3zdR9i9Nj0IGVW": Track(
       trackId: "6dHTkQYY3zdR9i9Nj0IGVW",
       name:
-          "I Like To Move It (feat. The Mad Stuntman) - Erick \"More\" Album Mix",
+      "I Like To Move It (feat. The Mad Stuntman) - Erick \"More\" Album Mix",
       artists: ["Reel 2 Real", "The Mad Stuntman", "Erick Morillo"],
       releaseYear: 1994,
     ),
@@ -907,7 +909,7 @@ class TrackDataRepository {
     "0HqeTDZMGlYDmgGGVFQrSg": Track(
       trackId: "0HqeTDZMGlYDmgGGVFQrSg",
       name:
-          "Moves Like Jagger - Studio Recording From \"The Voice\" Performance",
+      "Moves Like Jagger - Studio Recording From \"The Voice\" Performance",
       artists: ["Maroon 5", "Christina Aguilera"],
       releaseYear: 2011,
     ),
@@ -1718,7 +1720,7 @@ class TrackDataRepository {
     "2Cd9iWfcOpGDHLz6tVA3G4": Track(
       trackId: "2Cd9iWfcOpGDHLz6tVA3G4",
       name:
-          "Waka Waka (This Time for Africa) [The Official 2010 FIFA World Cup (TM) Song] (feat. Freshlyground)",
+      "Waka Waka (This Time for Africa) [The Official 2010 FIFA World Cup (TM) Song] (feat. Freshlyground)",
       artists: ["Shakira", "Freshlyground"],
       releaseYear: 2010,
     ),
@@ -1861,4 +1863,16 @@ class TrackDataRepository {
       releaseYear: 2009,
     ),
   };
+
+  @override
+  Future<List<Track>> getRandomTracks(int amount) {
+    // TODO: implement getRandomTracks
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Track?> getTrackById(String id) {
+    // TODO: implement getTrackById
+    throw UnimplementedError();
+  }
 }
