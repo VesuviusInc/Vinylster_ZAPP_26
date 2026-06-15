@@ -5,6 +5,7 @@ import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart
 import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
 import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
+import './ui/screens/local_game.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -75,10 +76,18 @@ class VinylsterHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("Vinylster"),
       ),
-      body: Column(
-          children: [
-
-          ]
+      body: Center(
+        child: ElevatedButton(
+          child: const Text('Lokales Spiel'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (context) => const localGame(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
