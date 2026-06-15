@@ -1,8 +1,9 @@
-import 'package:vinylster_zapp_26/data/repositories/TrackRepository.dart';
+import 'package:vinylster_zapp_26/data/repositories/track_repository.dart';
 
-import '../models/Track.dart';
+import '../models/track.dart';
 
 class LocalTrackRepository implements TrackRepository {
+  // TODO: Read from json/sqlite
   // the releaseYear of these tracks has been manually checked and should be correct (differences might appear single/album releases)
   static final Map<String, Track> _trackDatabase = {
     "59VR9MekNIMRLxQYfSn3Qr": Track(
@@ -1865,14 +1866,14 @@ class LocalTrackRepository implements TrackRepository {
   };
 
   @override
-  Future<List<Track>> getRandomTracks(int amount) {
-    // TODO: implement getRandomTracks
-    throw UnimplementedError();
+  Future<List<Track>> getRandomTracks(int amount) async {
+    List<Track> randomTracks = _trackDatabase.values.toList();
+    randomTracks.shuffle();
+    return randomTracks.take(amount).toList();
   }
 
   @override
-  Future<Track?> getTrackById(String id) {
-    // TODO: implement getTrackById
-    throw UnimplementedError();
+  Future<Track?> getTrackById(String id) async {
+    return _trackDatabase[id];
   }
 }

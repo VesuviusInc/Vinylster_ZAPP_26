@@ -1,4 +1,4 @@
-import '../models/Track.dart';
+import '../models/track.dart';
 
 abstract class TrackRepository {
   Future<Track?> getTrackById(String id);

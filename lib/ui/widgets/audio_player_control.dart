@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/data/services/SpotifyService.dart';
+import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
+import '../../logic/game_session.dart';
 
 class AudioPlayerControl extends StatefulWidget {
   final double screenWidth;
@@ -46,7 +47,7 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
 
     if (_animationController.value == 0.0) {
       _animationController.animateTo(1.0);
-      context.read<SpotifyService>().playSong();
+      context.read<SpotifyService>().playSong(context.read<GameSession>().currentTrack);
     } else {
       context.read<SpotifyService>().resumeSong();
       _animationController.animateTo(1.0);
@@ -86,7 +87,7 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
           seconds: SpotifyService.songPreviewLengthSeconds,
         );
         _animationController.animateTo(1.0);
-        context.read<SpotifyService>().playSong();
+        context.read<SpotifyService>().playSong(context.read<GameSession>().currentTrack);
       });
       _hasBeenReplayed = true;
     }
@@ -95,7 +96,8 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
   @override
   Widget build(BuildContext context) {
     final spotifyService = context.watch<SpotifyService>();
-    final currentTrackIdFromService = spotifyService.currentTrackId;
+    final gameSession = context.watch<GameSession>();
+    final currentTrackIdFromGameSession = gameSession.currentTrack != null ? gameSession.currentTrack!.trackId : "";
     final isConnected = spotifyService.isConnected;
 
     // in case the connections drops while playing
@@ -108,10 +110,9 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
     }
 
     _wasConnected = isConnected;
-
     // stopping current song when, song is changed
-    if (_currentTrackId != currentTrackIdFromService) {
-      _currentTrackId = currentTrackIdFromService;
+    if (_currentTrackId != currentTrackIdFromGameSession) {
+      _currentTrackId = currentTrackIdFromGameSession;
 
       Future.microtask(() {
         _animationController.duration = Duration(seconds: 1, milliseconds: 500);

@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
+import 'package:vinylster_zapp_26/logic/game_session.dart';
+
+class SpotifyPlaylistSelector extends StatefulWidget {
+  const SpotifyPlaylistSelector({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _SpotifyPlaylistSelectorState();
+}
+
+class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
+  final _formKey = GlobalKey<FormState>();
+  final linkTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    linkTextController.dispose();
+    super.dispose();
+  }
+
+  void setPlaylistLink(String link) {}
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: Add Checkbox for custom playlist
+    // checked => use custom playlist
+    // not checked => no custom playlist
+    final width = MediaQuery.of(context).size.width;
+    final gameSession = context.watch<GameSession>();
+    final playlist = context.watch<GameSession>().playlist;
+
+    return Padding(
+      padding: EdgeInsets.all(width * 0.15),
+      child: Column(
+        children: [
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: linkTextController,
+                  decoration: const InputDecoration(
+                    labelText: "Spotify Playlist Link",
+                    hintText: "https://open.spotify.com/playlist/...",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a link";
+                    }
+
+                    if (!value.contains("spotify.com/playlist")) {
+                      return "Please enter valid spotify-playlist link";
+                    }
+
+                    return null;
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      )),
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
+
+                      if (_formKey.currentState!.validate()) {
+                        String customPlaylistId = context
+                            .read<SpotifyService>()
+                            .getPlaylistIdByUrl(linkTextController.text);
+                        context.read<GameSession>().setCustomPlayList(
+                          customPlaylistId
+                        );
+
+                        String snackBarText = "";
+                        if(gameSession.playlist == null) {
+                          snackBarText = "Invalid playlist, please enter valid playlist link";
+                        } else {
+                          snackBarText = "Successfully saved spotify-playlist";
+                        }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                            Text(
+                              snackBarText
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text("Save"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (playlist != null) ...[
+            Image.network(playlist.imageUrl, width: 100, height: 100),
+            Text(playlist.name),
+            Text("${playlist.trackCount} Songs"),
+          ],
+        ],
+      ),
+    );
+  }
+}
