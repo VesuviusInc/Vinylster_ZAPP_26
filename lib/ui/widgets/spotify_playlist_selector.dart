@@ -82,18 +82,13 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
                           customPlaylistId
                         );
 
-                        String snackBarText = "";
-                        if(gameSession.playlist == null) {
-                          snackBarText = "Invalid playlist, please enter valid playlist link";
-                        } else {
-                          snackBarText = "Successfully saved spotify-playlist";
-                        }
+                       // TODO: add error snackBar message for invalid playlistId
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content:
                             Text(
-                              snackBarText
+                              "Successfully saved spotify playlist!"
                             ),
                             behavior: SnackBarBehavior.floating,
                           ),
