@@ -187,7 +187,6 @@ class SpotifyService extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print(data);
         final id = data["id"];
         final imageUrl = data["images"][0]["url"];
         final name = data["name"];
