@@ -1,41 +1,32 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vinylster_zapp_26/data/models/player.dart';
 import 'package:vinylster_zapp_26/data/models/playlist.dart';
 import 'package:vinylster_zapp_26/data/models/track.dart';
-import 'package:vinylster_zapp_26/data/models/track_repository_mode.dart';
 import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
-import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
 import 'package:vinylster_zapp_26/data/repositories/track_repository.dart';
-import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 
 class GameSession extends ChangeNotifier {
-  final LocalTrackRepository _localTrackRepository;
-  final CustomTrackRepository _customTrackRepository;
-  TrackRepositoryMode repoMode = TrackRepositoryMode.local;
-  final SpotifyService _spotifyService;
-  String? _playListId;
-  Track? _currentTrack;
+  TrackRepository? _activeTrackRepository;
 
   final List<Player> _players = [];
   int _activePlayerIndex = 0;
 
+  Track? _currentTrack;
   List<Track> _unplayedTracks = [];
   List<Track> _playedTracks = [];
 
-  GameSession({
-    required LocalTrackRepository localTrackRepository,
-    required CustomTrackRepository customTrackRepository,
-    required SpotifyService spotifyService,
-  }) : _spotifyService = spotifyService,
-       _localTrackRepository = localTrackRepository,
-       _customTrackRepository = customTrackRepository;
+  GameSession();
 
-  TrackRepository get _activeRepository => repoMode == TrackRepositoryMode.local ? _localTrackRepository : _customTrackRepository;
+  TrackRepository? get activeTrackRepository => _activeTrackRepository;
 
+  set activeTrackRepository(TrackRepository value) {
+    _activeTrackRepository = value;
+  }
 
   Track? get currentTrack => _currentTrack;
+
+  List<Player> get players => _players;
 
   /// Adds the given [player] to the GameSession players
   ///
@@ -67,60 +58,59 @@ class GameSession extends ChangeNotifier {
     return false;
   }
 
-  // should be called, when choosing custom playlist
-  Future<Playlist?> setCustomPlayList(String customPlayListId) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    if(customPlayListId.isEmpty) {
-      prefs.remove("custom_playlist_id");
-      return null;
-    }
-
-    prefs.setString("custom_playlist_id", customPlayListId);
-
-    // TODO: check if playlist has enough tracks!!
-    _customTrackRepository.currentPlaylist = await _spotifyService.getPlaylistInfo(customPlayListId);
-
-    _playListId = customPlayListId;
-    repoMode = TrackRepositoryMode.custom;
+  void clearPlayers() {
+    _players.clear();
     notifyListeners();
-    return _customTrackRepository.currentPlaylist;
   }
 
   Future<void> start() async {
-    _players.add(Player("Herbert"));
-    _unplayedTracks = await _activeRepository.getRandomTracks(
+    if(_activeTrackRepository == null) {
+      throw Exception("No TrackRepository set");
+    }
+
+    _unplayedTracks = await _activeTrackRepository!.getRandomTracks(
       _players.length * 10,
     );
-    _activePlayerIndex = Random().nextInt(_players.length) -1;
+    _activePlayerIndex = Random().nextInt(_players.length) - 1;
     _playedTracks = [];
     _currentTrack = _unplayedTracks[_unplayedTracks.length - 1];
     notifyListeners();
   }
 
-  Playlist? get playlist  {
-    if(repoMode == TrackRepositoryMode.custom) {
-      return _customTrackRepository.currentPlaylist;
+  Playlist? get playlist {
+    final repo = _activeTrackRepository;
+
+    if(repo is CustomTrackRepository) {
+      return repo.currentPlaylist;
     }
     return null;
   }
 
   Future<void> next() async {
-    if (_currentTrack != null) {
-      _playedTracks.add(_currentTrack!);
-      _unplayedTracks.remove(_currentTrack);
-      _currentTrack = _unplayedTracks[_unplayedTracks.length - 1];
+    if(_activeTrackRepository == null) {
+      throw Exception("No TrackRepository set");
     }
 
-    if(_players.isEmpty) {
+    if (_currentTrack == null) {
       return;
     }
 
-    if(_unplayedTracks.isEmpty) {
-      _unplayedTracks = await _activeRepository.getRandomTracks(_players.length * 10);
+    if (_unplayedTracks.length == 1) {
+      _unplayedTracks.addAll(await _activeTrackRepository!.getRandomTracks(
+        _players.length * 10,
+      ));
     }
+
+    _playedTracks.add(_currentTrack!);
+    _unplayedTracks.remove(_currentTrack);
+    _currentTrack = _unplayedTracks[_unplayedTracks.length - 1];
+
+    if (_players.isEmpty) {
+      return;
+    }
+
     // so playerIndex will automatically start over at 0
-    _activePlayerIndex = ((_activePlayerIndex+1) % (_players.length));
+    _activePlayerIndex = ((_activePlayerIndex + 1) % (_players.length));
     notifyListeners();
   }
 

@@ -1,3 +1,0 @@
-enum TrackRepositoryMode {
-  local, custom
-}
