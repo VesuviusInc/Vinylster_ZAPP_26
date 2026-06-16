@@ -167,12 +167,7 @@ class SpotifyService extends ChangeNotifier {
   }
 
   String getPlaylistIdByUrl(String playlistUrl) {
-    int startIndex = playlistUrl.indexOf("playlist") + "playlist".length+1;
-    int endIndex = playlistUrl.indexOf("?");
-    if (endIndex == -1) {
-      endIndex = playlistUrl.length;
-    }
-    return playlistUrl.substring(startIndex, endIndex);
+    return Uri.parse(playlistUrl).pathSegments.last;
   }
 
   Future<Playlist?> getPlaylistInfo(String playlistId) async {
