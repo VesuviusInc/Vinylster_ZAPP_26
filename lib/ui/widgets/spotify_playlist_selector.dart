@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
 import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
+import '../../data/models/playlist.dart';
 
 class SpotifyPlaylistSelector extends StatefulWidget {
   const SpotifyPlaylistSelector({super.key});
@@ -56,8 +58,12 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
                       return "Please enter a link";
                     }
 
-                    if (!value.contains("spotify.com/playlist")) {
+                    if (!value.contains("spotify.com/playlist/")) {
                       return "Please enter valid spotify-playlist link";
+                    }
+
+                    if(Uri.parse(value).pathSegments.last.length != 22) {
+                      return "Please enter a spotify playlist link with a valid id";
                     }
 
                     return null;
@@ -75,20 +81,30 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
                       FocusScope.of(context).unfocus();
 
                       if (_formKey.currentState!.validate()) {
-                        String customPlaylistId = context
-                            .read<SpotifyService>()
-                            .getPlaylistIdByUrl(linkTextController.text);
-                        context.read<GameSession>().setCustomPlayList(
+                        final spotifyService = context.read<SpotifyService>();
+                        final gameSession = context.read<GameSession>();
+                        gameSession.activeTrackRepository = CustomTrackRepository(spotifyService);
+
+                        String customPlaylistId = spotifyService.getPlaylistIdByUrl(linkTextController.text);
+                        final customRepo = context.read<CustomTrackRepository>();
+                        Playlist? playlist = await customRepo.setCustomPlaylist(
                           customPlaylistId
                         );
 
-                       // TODO: add error snackBar message for invalid playlistId
+                        if(!context.mounted) return;
 
+                        String snackBarText = "";
+                        if(playlist == null){
+                          snackBarText = "No playlist with provided spotify playlist link. Please check again!";
+                        } else {
+                          snackBarText ="Successfully saved spotify playlist!";
+                          gameSession.activeTrackRepository = customRepo;
+                        }
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content:
                             Text(
-                              "Successfully saved spotify playlist!"
+                              snackBarText
                             ),
                             behavior: SnackBarBehavior.floating,
                           ),
