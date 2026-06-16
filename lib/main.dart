@@ -16,37 +16,16 @@ Future<void> main() async {
         ChangeNotifierProvider<SpotifyService>(
           create: (context) => SpotifyService()..checkAutoConnect(),
         ),
-        Provider<LocalTrackRepository>(create: (_) => LocalTrackRepository()),
-        ProxyProvider<SpotifyService, CustomTrackRepository>(
+        Provider<LocalTrackRepository>(
+          create: (context) => LocalTrackRepository(),
+        ),
+        ChangeNotifierProxyProvider<SpotifyService, CustomTrackRepository>(
+          create: (context) =>
+              CustomTrackRepository(context.read<SpotifyService>()),
           update: (context, spotifyService, _) =>
               CustomTrackRepository(spotifyService),
         ),
-        ChangeNotifierProxyProvider3<
-          LocalTrackRepository,
-          CustomTrackRepository,
-          SpotifyService,
-          GameSession
-        >(
-          create: (context) => GameSession(
-            localTrackRepository: context.read<LocalTrackRepository>(),
-            customTrackRepository: context.read<CustomTrackRepository>(),
-            spotifyService: context.read<SpotifyService>(),
-          ),
-          update:
-              (
-                context,
-                localTrackRepo,
-                customTrackRepo,
-                spotifyService,
-                previous,
-              ) =>
-                  previous ??
-                  GameSession(
-                    localTrackRepository: localTrackRepo,
-                    customTrackRepository: customTrackRepo,
-                    spotifyService: spotifyService,
-                  ),
-        ),
+        ChangeNotifierProvider<GameSession>(create: (context) => GameSession()),
       ],
       child: const MyApp(),
     ),
