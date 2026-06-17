@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/services/SpotifyService.dart';
+import '../../data/services/spotify_service.dart';
 
 class SpotifyAuthWidget extends StatelessWidget {
   const SpotifyAuthWidget({super.key});

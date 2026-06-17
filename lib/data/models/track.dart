@@ -1,8 +1,8 @@
 class Track {
-  String _trackId;
-  String _name;
-  List<String> _artists;
-  int _releaseYear;
+  final String _trackId;
+  final String _name;
+  final List<String> _artists;
+  final int _releaseYear;
 
   Track({
     required String trackId,

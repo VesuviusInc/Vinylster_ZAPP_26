@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
@@ -10,7 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:http/http.dart' as http;
-import '../models/Track.dart';
+import 'package:vinylster_zapp_26/data/models/playlist.dart';
+import '../models/track.dart';
 
 class SpotifyService extends ChangeNotifier {
   // maximum number of items returned by playlist
@@ -18,22 +19,12 @@ class SpotifyService extends ChangeNotifier {
   static const maxItemLimit = 50;
   bool _isConnected = false;
   String? _accessToken;
-  final List<Track> _playedTracks = [];
-
-  // default playlistId, TODO: replace with locally stored list of songs, unless user chooses playlist
-  late String _playlistId = "07qHJQ2ZwEU3KWsElhCIis";
-  final List<Track> _cachedTracks = [];
-  int _cachedTimes = 0;
-  Track? _currentTrack;
   Timer? _timer;
   final Stopwatch _stopwatch = Stopwatch();
   int _remainingMilliseconds = songPreviewLengthSeconds * 1000;
   late Logger _logger;
 
   bool get isConnected => _isConnected;
-
-  String get currentTrackId =>
-      _currentTrack == null ? "" : _currentTrack!.trackId;
 
   SpotifyService() {
     _initLogger();
@@ -169,86 +160,48 @@ class SpotifyService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final shouldAutoConnect = prefs.getBool("spotify_auto_connect") ?? false;
     _logger.i("AutoConnect is ${shouldAutoConnect ? "enabled" : "disabled"}");
-    final customPlaylistId = prefs.getString("custom_playlist_id");
-    if (customPlaylistId != null && customPlaylistId.isNotEmpty) {
-      _playlistId = customPlaylistId;
-    }
-
     if (shouldAutoConnect) {
       await connectToSpotify();
     }
-    // TODO: remove, only called here for testing
-    // await start();
     notifyListeners();
   }
 
-  Future<void> setCustomPlaylistId(String playlistId) async {
-    _playlistId = playlistId;
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("custom_playlist_id", playlistId);
-
-    notifyListeners();
+  String getPlaylistIdByUrl(String playlistUrl) {
+    return Uri.parse(playlistUrl).pathSegments.last;
   }
 
-  String _getPlaylistIdByUrl(String playlistUrl) {
-    int startIndex = playlistUrl.indexOf("playlist") + 9;
-    int endIndex = playlistUrl.indexOf("?");
-    if (endIndex == -1) {
-      endIndex = playlistUrl.length;
+  Future<Playlist?> getPlaylistInfo(String playlistId) async {
+    if (_accessToken == null) {
+      _logger.e(
+        "No accessToken while trying to fetch playlist information: $e",
+      );
     }
-    return playlistUrl.substring(startIndex, endIndex);
+    try {
+      final url = Uri.parse(
+        "https://api.spotify.com/v1/playlists/$playlistId",
+      );
+      final response = await http.get(
+        url,
+        headers: {"Authorization": "Bearer $_accessToken"},
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final id = data["id"];
+        final imageUrl = data["images"][0]["url"];
+        final name = data["name"];
+        final trackCount = data["items"]["total"] as int;
+        return Playlist(id, name, trackCount, imageUrl);
+      }
+    } catch (e) {
+      _logger.e("Error in SpotifyService.getPlaylist(): $e");
+    }
+    return null;
   }
 
-  // should be called when game ist started
-  Future<void> start() async {
-    if (!_isConnected) {
-      return;
-    }
-    // optional TODO: when starting the game, cache more than 50 songs, to not always get the same songs
-    await cacheTracks();
-    await nextRandomTrack();
-  }
-
-  Future<void> nextRandomTrack() async {
-    if (!_isConnected) {
-      return;
-    }
-
-    // caching next tracks if no more cached tracks are available
-    if (_cachedTracks.isEmpty) {
-      await cacheTracks();
-    }
-
-    _logger.i("_cachedTracks.length: ${_cachedTracks.length}");
-    if (_currentTrack != null) {
-      _playedTracks.add(_currentTrack!);
-    }
-    int maxIndex = _cachedTracks.length;
-    int randomIndex = Random().nextInt(maxIndex);
-    _currentTrack = _cachedTracks[randomIndex];
-    _cachedTracks.remove(_currentTrack);
-
-    _logger.i(
-      "currentTrack: ${_currentTrack == null ? "null" : _currentTrack!.name}",
-    );
-    notifyListeners();
-  }
-
-  Future<void> cacheTracks() async {
-    if (!_isConnected) {
-      return;
-    }
-
-    List<Track> newlyCachedTracks = await getTracks(
-      _cachedTimes * maxItemLimit,
-    );
-    _cachedTracks.addAll(newlyCachedTracks);
-    _cachedTimes++;
-  }
-
-  Future<List<Track>> getTracks(
-    int offset, {
+  Future<List<Track>> getTracks({
+    required String playListId,
+    required int offset,
     int limit = SpotifyService.maxItemLimit,
   }) async {
     List<Track> tracks = [];
@@ -257,7 +210,7 @@ class SpotifyService extends ChangeNotifier {
     }
     try {
       final url = Uri.parse(
-        "https://api.spotify.com/v1/playlists/$_playlistId/items?offset=$offset&limit=$limit",
+        "https://api.spotify.com/v1/playlists/$playListId/items?offset=$offset&limit=$limit",
       );
       final response = await http.get(
         url,
@@ -271,11 +224,18 @@ class SpotifyService extends ChangeNotifier {
           String trackName = track["item"]["name"];
           String trackId = track["item"]["id"];
           List<String> artists = [];
-          int releaseYear = _getReleaseYearFromString(track["item"]["album"]["release_date"]);
+          int releaseYear = _getReleaseYearFromString(
+            track["item"]["album"]["release_date"],
+          );
           for (final artist in track["item"]["artists"]) {
             artists.add(artist["name"]);
           }
-          Track newTrack = Track(trackId: trackId, name: trackName, artists: artists, releaseYear: releaseYear);
+          Track newTrack = Track(
+            trackId: trackId,
+            name: trackName,
+            artists: artists,
+            releaseYear: releaseYear,
+          );
           tracks.add(newTrack);
         }
       }
@@ -286,17 +246,19 @@ class SpotifyService extends ChangeNotifier {
   }
 
   // plays only a 30 seconds preview
-  Future<void> playSong() async {
+  Future<void> playSong(Track? track) async {
     if (!_isConnected) {
       return;
     }
-    try {
-      if (_currentTrack == null) {
-        return;
-      }
 
+    if(track == null) {
+      _logger.e("Track passed for playing is null!");
+      return;
+    }
+
+    try {
       await SpotifySdk.play(
-        spotifyUri: "spotify:track:${_currentTrack!.trackId}",
+        spotifyUri: "spotify:track:${track.trackId}",
       );
       _startTimer();
     } on MissingPluginException catch (e, stackTrace) {
