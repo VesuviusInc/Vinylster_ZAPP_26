@@ -35,8 +35,7 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
     // checked => use custom playlist
     // not checked => no custom playlist
     final width = MediaQuery.of(context).size.width;
-    final gameSession = context.watch<GameSession>();
-    final playlist = context.watch<GameSession>().playlist;
+    Playlist? playlist = context.watch<CustomTrackRepository>().currentPlaylist;
 
     return Padding(
       padding: EdgeInsets.all(width * 0.15),
@@ -62,7 +61,7 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
                       return "Please enter valid spotify-playlist link";
                     }
 
-                    if(Uri.parse(value).pathSegments.last.length != 22) {
+                    if (Uri.parse(value).pathSegments.last.length != 22) {
                       return "Please enter a spotify playlist link with a valid id";
                     }
 
@@ -76,36 +75,36 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                      )),
+                      ),
+                    ),
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
 
                       if (_formKey.currentState!.validate()) {
                         final spotifyService = context.read<SpotifyService>();
                         final gameSession = context.read<GameSession>();
-                        gameSession.activeTrackRepository = CustomTrackRepository(spotifyService);
 
-                        String customPlaylistId = spotifyService.getPlaylistIdByUrl(linkTextController.text);
-                        final customRepo = context.read<CustomTrackRepository>();
-                        Playlist? playlist = await customRepo.setCustomPlaylist(
-                          customPlaylistId
-                        );
-
-                        if(!context.mounted) return;
-
-                        String snackBarText = "";
-                        if(playlist == null){
-                          snackBarText = "No playlist with provided spotify playlist link. Please check again!";
-                        } else {
-                          snackBarText ="Successfully saved spotify playlist!";
+                        String customPlaylistId = spotifyService
+                            .getPlaylistIdByUrl(linkTextController.text);
+                        final customRepo = context
+                            .read<CustomTrackRepository>();
+                        String snackBarText =
+                            "Successfully saved spotify playlist!";
+                        try {
+                          await customRepo.setCustomPlaylist(customPlaylistId);
                           gameSession.activeTrackRepository = customRepo;
+                        } catch (e) {
+                          snackBarText = e.toString().replaceAll(
+                            "Exception: ",
+                            "",
+                          );
                         }
+                        if (!context.mounted) return;
+
+
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content:
-                            Text(
-                              snackBarText
-                            ),
+                            content: Text(snackBarText),
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
@@ -118,9 +117,32 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
             ),
           ),
           if (playlist != null) ...[
-            Image.network(playlist.imageUrl, width: 100, height: 100),
-            Text(playlist.name),
-            Text("${playlist.trackCount} Songs"),
+            Card(
+              elevation: 0,
+              color: Colors.grey.shade200,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.network(
+                      playlist.imageUrl,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  title: Text(
+                    playlist.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text("${playlist.trackCount} Songs"),
+                ),
+              ),
+            ),
           ],
         ],
       ),
