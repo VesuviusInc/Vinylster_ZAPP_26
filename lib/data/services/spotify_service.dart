@@ -22,6 +22,7 @@ class SpotifyService extends ChangeNotifier {
   Timer? _timer;
   final Stopwatch _stopwatch = Stopwatch();
   int _remainingMilliseconds = songPreviewLengthSeconds * 1000;
+  String? _currentUserId;
   late Logger _logger;
 
   bool get isConnected => _isConnected;
@@ -70,6 +71,8 @@ class SpotifyService extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool("spotify_auto_connect", true);
 
+      _currentUserId = await getCurrentUserId(_accessToken!);
+
       notifyListeners();
       _logger.i("Successfully connected to Spotify SDK");
 
@@ -114,6 +117,24 @@ class SpotifyService extends ChangeNotifier {
     } catch (e) {
       _logger.e("Error in SpotifyService.connectToSpotify(): $e");
       return "Unexpected error: $e";
+    }
+  }
+
+  Future<String> getCurrentUserId(String accessToken) async {
+    final url = Uri.parse("https://api.spotify.com/v1/me");
+    final response = await http.get(
+      url,
+      headers : {
+        "Authorization" : "Bearer $accessToken",
+        "Accept": "application/json"
+      }
+    );
+
+    if(response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+        return data["id"];
+    } else {
+      throw Exception("Error while trying to get user profile: ${response.statusCode}");
     }
   }
 
@@ -170,13 +191,13 @@ class SpotifyService extends ChangeNotifier {
     return Uri.parse(playlistUrl).pathSegments.last;
   }
 
-  Future<Playlist?> getPlaylistInfo(String playlistId) async {
+  Future<Playlist> getPlaylistInfo(String playlistId) async {
     if (_accessToken == null) {
       _logger.e(
         "No accessToken while trying to fetch playlist information: $e",
       );
+      throw Exception("Error occurred while trying to fetch playlist information");
     }
-    try {
       final url = Uri.parse(
         "https://api.spotify.com/v1/playlists/$playlistId",
       );
@@ -184,19 +205,19 @@ class SpotifyService extends ChangeNotifier {
         url,
         headers: {"Authorization": "Bearer $_accessToken"},
       );
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        if(data["owner"]["id"] != _currentUserId) {
+          throw Exception("The current user isn't the owner/creator of the playlist.");
+        }
         final id = data["id"];
         final imageUrl = data["images"][0]["url"];
         final name = data["name"];
         final trackCount = data["items"]["total"] as int;
         return Playlist(id, name, trackCount, imageUrl);
+      } else {
+        throw Exception("No playlist with provided spotify playlist link. Please check again!");
       }
-    } catch (e) {
-      _logger.e("Error in SpotifyService.getPlaylist(): $e");
-    }
-    return null;
   }
 
   Future<List<Track>> getTracks({

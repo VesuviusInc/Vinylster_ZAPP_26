@@ -44,17 +44,26 @@ class CustomTrackRepository extends ChangeNotifier implements TrackRepository {
 
   // should be called, when choosing custom playlist
   Future<Playlist?> setCustomPlaylist(String customPlaylistId) async {
-    final prefs = await SharedPreferences.getInstance();
 
-    if (customPlaylistId.isEmpty) {
-      prefs.remove("custom_playlist_id");
+      final prefs = await SharedPreferences.getInstance();
+
+      if (customPlaylistId.isEmpty) {
+        prefs.remove("custom_playlist_id");
+        currentPlaylist = null;
+        notifyListeners();
+        return null;
+      }
+      Playlist? fetchedPlaylist;
+      try {
+      fetchedPlaylist = await _spotifyService.getPlaylistInfo(customPlaylistId);
+    } catch (e) {
       currentPlaylist = null;
-      notifyListeners();
-      return null;
+      rethrow;
     }
+      if(fetchedPlaylist!.trackCount < 10) {
+        throw Exception("Too few songs to use this playlist. Please choose another one!");
+      }
 
-    // TODO: check if new playlist has enough tracks!
-    Playlist? fetchedPlaylist = await _spotifyService.getPlaylistInfo(customPlaylistId);
     prefs.setString("custom_playlist_id", customPlaylistId);
     currentPlaylist = fetchedPlaylist;
 
