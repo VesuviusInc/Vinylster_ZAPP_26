@@ -41,6 +41,7 @@ dependencies:
   http: ^1.6.0
   logger: ^2.7.0
   path_provider: ^2.1.5
+  go_router: ^17.3.0
 
 dev_dependencies:
   flutter_test:

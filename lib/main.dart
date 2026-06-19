@@ -6,6 +6,37 @@ import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart'
 import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 import './ui/screens/local_game.dart';
+import './ui/screens/settings.dart';
+import './ui/screens/game_screen.dart';
+import 'package:go_router/go_router.dart';
+
+final _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      name: 'Home',
+      path: '/',
+      builder: (context, state) => const VinylsterHomePage(),
+    ),
+    GoRoute(
+      name: 'LocalGame',
+      path: '/localgame',
+      builder: (context, state) => const LocalGame(),
+    ),
+    GoRoute(
+      name: 'Settings',
+      path: '/settings',
+      builder: (context, state) => const Settings(),
+    ),
+    GoRoute(
+      name: 'GameScreen',
+      path: '/gamescreen',
+      builder: (context, state) => const GameScreen(),
+    ),
+  ],
+);
+
+
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -37,10 +68,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Vinylster',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const VinylsterHomePage(),
+      routerConfig: _router,
     );
   }
 }
@@ -56,17 +87,25 @@ class VinylsterHomePage extends StatelessWidget {
         title: Text("Vinylster"),
       ),
       body: Center(
-        child: ElevatedButton(
-          child: const Text('Lokales Spiel'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (context) => const localGame(),
-              ),
-            );
-          },
-        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 200),
+            ElevatedButton(
+              child: const Text('Local Game'),
+              onPressed: () {
+                context.goNamed('LocalGame');
+              },
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              child: const Text('Settings'),
+              onPressed: () {
+                context.goNamed('Settings');
+              },
+            ),
+          ],
+        )
+
       ),
     );
   }
