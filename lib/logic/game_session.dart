@@ -63,6 +63,14 @@ class GameSession extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<Player> getPlayers() {
+    return _players;
+  }
+
+  Player getPlayerByIndex(int index) {
+    return _players[index];
+  }
+
   Future<void> start() async {
     if(_activeTrackRepository == null) {
       throw Exception("No TrackRepository set");
