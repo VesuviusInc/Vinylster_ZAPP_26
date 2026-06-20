@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
+import 'package:vinylster_zapp_26/logic/settings_controller.dart';
+
 import '../../logic/game_session.dart';
 
 class AudioPlayerControl extends StatefulWidget {
@@ -99,6 +101,7 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
     final gameSession = context.watch<GameSession>();
     final currentTrackIdFromGameSession = gameSession.currentTrack != null ? gameSession.currentTrack!.trackId : "";
     final isConnected = spotifyService.isConnected;
+    final settingsController = context.watch<SettingsController>();
 
     // in case the connections drops while playing
     if (_wasConnected == true && !isConnected) {
@@ -173,7 +176,7 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
                   end: 1.0,
                 ).animate(_animationController),
                 child: Image(
-                  image: AssetImage("assets/images/vinyl-record.png"),
+                  image: AssetImage("assets/images/${settingsController.vinylImages[settingsController.selectedVinylImageIndex]}.png"),
                   width: widget.screenWidth * 0.5 > 500.0
                       ? 500.0
                       : widget.screenWidth * 0.5,
