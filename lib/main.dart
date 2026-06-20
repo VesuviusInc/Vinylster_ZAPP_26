@@ -7,9 +7,9 @@ import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart'
 import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 import 'package:vinylster_zapp_26/logic/settings_controller.dart';
+import 'package:vinylster_zapp_26/ui/screens/settings_screen.dart';
 
 import './ui/screens/local_game.dart';
-import './ui/screens/settings.dart';
 import './ui/screens/game_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,7 +29,7 @@ final _router = GoRouter(
     GoRoute(
       name: 'Settings',
       path: '/settings',
-      builder: (context, state) => const Settings(),
+      builder: (context, state) => const SettingsScreen(),
     ),
     GoRoute(
       name: 'GameScreen',
