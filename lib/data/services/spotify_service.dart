@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
+import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:vinylster_zapp_26/data/models/playlist.dart';
+
 import '../models/track.dart';
 
 class SpotifyService extends ChangeNotifier {
@@ -27,13 +27,12 @@ class SpotifyService extends ChangeNotifier {
 
   bool get isConnected => _isConnected;
 
-  SpotifyService() {
-    _initLogger();
+  SpotifyService(String logDirectoryPath) {
+    _initLogger(logDirectoryPath);
   }
 
-  Future<void> _initLogger() async {
-    final appDocDir = await getApplicationDocumentsDirectory();
-    final logFilePath = "${appDocDir.path}/vinylster_spotify_errors.log";
+  void _initLogger(String logDirectoryPath) {
+    final logFilePath = "$logDirectoryPath/vinylster_spotify_errors.log";
     final logFile = File(logFilePath);
 
     _logger = Logger(
@@ -67,9 +66,6 @@ class SpotifyService extends ChangeNotifier {
         clientId: clientId,
         redirectUrl: redirectUri,
       );
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool("spotify_auto_connect", true);
 
       _currentUserId = await getCurrentUserId(_accessToken!);
 
@@ -144,9 +140,6 @@ class SpotifyService extends ChangeNotifier {
       _isConnected = false;
       _accessToken = null;
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool("spotify_auto_connect", false);
-
       notifyListeners();
       // resetting playback timer
       _resetTimer();
@@ -177,9 +170,7 @@ class SpotifyService extends ChangeNotifier {
     }
   }
 
-  Future<void> checkAutoConnect() async {
-    final prefs = await SharedPreferences.getInstance();
-    final shouldAutoConnect = prefs.getBool("spotify_auto_connect") ?? false;
+  Future<void> checkAutoConnect(bool shouldAutoConnect) async {
     _logger.i("AutoConnect is ${shouldAutoConnect ? "enabled" : "disabled"}");
     if (shouldAutoConnect) {
       await connectToSpotify();

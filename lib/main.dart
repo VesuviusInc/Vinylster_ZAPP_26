@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
 import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
 import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
+import 'package:vinylster_zapp_26/logic/settings_controller.dart';
+
 import './ui/screens/local_game.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/.env");
+  WidgetsFlutterBinding.ensureInitialized();
+  final settingsController = SettingsController();
+  await settingsController.loadSettings();
+  final appDocDir = await getApplicationDocumentsDirectory();
 
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: settingsController),
         ChangeNotifierProvider<SpotifyService>(
-          create: (context) => SpotifyService()..checkAutoConnect(),
+          lazy: false,
+          create: (context) => SpotifyService(appDocDir.path)..checkAutoConnect(settingsController.autoConnect),
         ),
         Provider<LocalTrackRepository>(
           create: (context) => LocalTrackRepository(),
