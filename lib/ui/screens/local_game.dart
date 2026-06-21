@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/data/models/player.dart';
+import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
-
 
 class LocalGame extends StatefulWidget {
   const LocalGame({super.key});
@@ -85,6 +85,9 @@ class _LocalGameState extends State<LocalGame> {
               ElevatedButton(
                 child: const Text('Start Game'),
                 onPressed: () {
+                  final gameSession = context.read<GameSession>();
+                  gameSession.activeTrackRepository ??= context.read<LocalTrackRepository>();
+                  gameSession.start();
                   context.goNamed('GameScreen');
                 },
               ),

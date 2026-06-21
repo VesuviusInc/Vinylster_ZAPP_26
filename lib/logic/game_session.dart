@@ -11,6 +11,7 @@ class GameSession extends ChangeNotifier {
 
   final List<Player> _players = [];
   int _activePlayerIndex = 0;
+  int requiredCardsToWin = 10;
 
   Track? _currentTrack;
   List<Track> _unplayedTracks = [];
@@ -27,6 +28,8 @@ class GameSession extends ChangeNotifier {
   Track? get currentTrack => _currentTrack;
 
   List<Player> get players => _players;
+
+  Player get currentPlayer => _players[_activePlayerIndex];
 
   /// Adds the given [player] to the GameSession players
   ///
@@ -76,10 +79,14 @@ class GameSession extends ChangeNotifier {
       throw Exception("No TrackRepository set");
     }
 
+    if(players.isEmpty) {
+      throw Exception("No players added");
+    }
+
     _unplayedTracks = await _activeTrackRepository!.getRandomTracks(
       _players.length * 10,
     );
-    _activePlayerIndex = Random().nextInt(_players.length) - 1;
+    _activePlayerIndex = Random().nextInt(_players.length);
     _playedTracks = [];
     _currentTrack = _unplayedTracks[_unplayedTracks.length - 1];
     notifyListeners();

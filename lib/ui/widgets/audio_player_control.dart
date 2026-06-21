@@ -6,9 +6,7 @@ import 'package:vinylster_zapp_26/logic/settings_controller.dart';
 import '../../logic/game_session.dart';
 
 class AudioPlayerControl extends StatefulWidget {
-  final double screenWidth;
-
-  const AudioPlayerControl({super.key, required this.screenWidth});
+  const AudioPlayerControl({super.key});
 
   @override
   State createState() => _AudioPlayerControlState();
@@ -49,7 +47,9 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
 
     if (_animationController.value == 0.0) {
       _animationController.animateTo(1.0);
-      context.read<SpotifyService>().playSong(context.read<GameSession>().currentTrack);
+      context.read<SpotifyService>().playSong(
+        context.read<GameSession>().currentTrack,
+      );
     } else {
       context.read<SpotifyService>().resumeSong();
       _animationController.animateTo(1.0);
@@ -89,7 +89,9 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
           seconds: SpotifyService.songPreviewLengthSeconds,
         );
         _animationController.animateTo(1.0);
-        context.read<SpotifyService>().playSong(context.read<GameSession>().currentTrack);
+        context.read<SpotifyService>().playSong(
+          context.read<GameSession>().currentTrack,
+        );
       });
       _hasBeenReplayed = true;
     }
@@ -99,9 +101,12 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
   Widget build(BuildContext context) {
     final spotifyService = context.watch<SpotifyService>();
     final gameSession = context.watch<GameSession>();
-    final currentTrackIdFromGameSession = gameSession.currentTrack != null ? gameSession.currentTrack!.trackId : "";
+    final currentTrackIdFromGameSession = gameSession.currentTrack != null
+        ? gameSession.currentTrack!.trackId
+        : "";
     final isConnected = spotifyService.isConnected;
     final settingsController = context.watch<SettingsController>();
+    final screenWidth = MediaQuery.of(context).size.width;
 
     // in case the connections drops while playing
     if (_wasConnected == true && !isConnected) {
@@ -131,8 +136,8 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
 
     return Padding(
       padding: EdgeInsets.only(
-        left: widget.screenWidth * 0.25,
-        right: widget.screenWidth * 0.25,
+        left: screenWidth * 0.25,
+        right: screenWidth * 0.25,
       ),
       child: Column(
         children: [
@@ -176,10 +181,10 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
                   end: 1.0,
                 ).animate(_animationController),
                 child: Image(
-                  image: AssetImage("assets/images/${settingsController.vinylImages[settingsController.selectedVinylImageIndex]}.png"),
-                  width: widget.screenWidth * 0.5 > 500.0
-                      ? 500.0
-                      : widget.screenWidth * 0.5,
+                  image: AssetImage(
+                    "assets/images/${settingsController.vinylImages[settingsController.selectedVinylImageIndex]}.png",
+                  ),
+                  width: screenWidth * 0.5 > 500.0 ? 500.0 : screenWidth * 0.5,
                 ),
               ),
             ],
