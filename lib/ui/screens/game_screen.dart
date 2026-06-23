@@ -30,7 +30,7 @@ class GameScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Text("Active: "),
+                    Text("Player: "),
                     Text(
                       currentPlayer.name,
                       style: TextStyle(

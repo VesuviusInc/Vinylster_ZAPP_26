@@ -180,12 +180,25 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
                   begin: 0.0,
                   end: 1.0,
                 ).animate(_animationController),
-                child: Image(
-                  image: AssetImage(
-                    "assets/images/${settingsController.vinylImages[settingsController.selectedVinylImageIndex]}.png",
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 30,
+                        spreadRadius: 5,
+                        offset: const Offset(0, 15)
+                      )
+                    ]
                   ),
-                  width: screenWidth * 0.5 > 500.0 ? 500.0 : screenWidth * 0.5,
-                ),
+                  child: Image(
+                    image: AssetImage(
+                      "assets/images/${settingsController.vinylImages[settingsController.selectedVinylImageIndex]}.png",
+                    ),
+                    width: screenWidth * 0.5 > 500.0 ? 500.0 : screenWidth * 0.5,
+                  ),
+                )
               ),
             ],
           ),
