@@ -84,11 +84,27 @@ class _LocalGameState extends State<LocalGame> {
               const SizedBox(height: 20),
               ElevatedButton(
                 child: const Text('Start Game'),
-                onPressed: () {
+                onPressed: () async {
                   final gameSession = context.read<GameSession>();
                   gameSession.activeTrackRepository ??= context.read<LocalTrackRepository>();
-                  gameSession.start();
-                  context.goNamed('GameScreen');
+                  try {
+                    await gameSession.start();
+                    if(!context.mounted) return;
+
+                    context.goNamed('GameScreen');
+                  } catch (e) {
+                    showDialog(context: context, builder: (BuildContext context) => AlertDialog(
+                      title: const Text("Hoppla!"),
+                      content: Text("No players added! Please add players before starting the game!"),
+                      actions: [
+                        TextButton(onPressed: () => {
+                          Navigator.pop(context, "Ok")
+                        },
+                        child: Text("Ok")
+                        )
+                      ],
+                    ));
+                  }
                 },
               ),
               const SizedBox(height: 50),

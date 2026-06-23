@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import '../../data/services/spotify_service.dart';
 import '../../logic/settings_controller.dart';
 
-class SpotifyAuthWidget extends StatelessWidget {
-  const SpotifyAuthWidget({super.key});
+class SpotifyConnectionView extends StatelessWidget {
+  const SpotifyConnectionView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,13 @@ class SpotifyAuthWidget extends StatelessWidget {
               foregroundColor: spotifyService.isConnected ? Colors.red.shade900 : Colors.white,
             ),
             onPressed: () async {
-              final errorMessage = spotifyService.isConnected
-                  ? await context.read<SpotifyService>().disconnect()
-                  : await context.read<SpotifyService>().connectToSpotify();
+              final spotifyService = context.read<SpotifyService>();
+              String? errorMessage;
+              if(spotifyService.isConnected) {
+                errorMessage = await context.read<SpotifyService>().disconnect();
+              } else {
+                errorMessage =  await context.read<SpotifyService>().connectToSpotify();
+              }
 
               if (!context.mounted) return;
 

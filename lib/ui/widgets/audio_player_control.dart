@@ -145,28 +145,28 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
             spacing: 20,
             alignment: WrapAlignment.center,
             children: [
-              FloatingActionButton(
+              FilledButton.tonal(
                 // onPressed = null => button is disabled
                 onPressed: isConnected ? () => pauseSong() : null,
-                backgroundColor: isConnected
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Colors.grey,
+                style: FilledButton.styleFrom(
+                  backgroundColor: isConnected ? Theme.of(context).colorScheme.primaryContainer : Colors.grey,
+                ),
                 child: Icon(Icons.pause),
               ),
-              FloatingActionButton(
+              FilledButton.tonal(
                 // onPressed = null => button is disabled
                 onPressed: isConnected ? () => playSong() : null,
-                backgroundColor: isConnected
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Colors.grey,
+                style: FilledButton.styleFrom(
+                  backgroundColor: isConnected ? Theme.of(context).colorScheme.primaryContainer : Colors.grey,
+                ),
                 child: Icon(Icons.play_arrow),
               ),
-              FloatingActionButton(
+              FilledButton.tonal(
                 // onPressed = null => button is disabled
                 onPressed: isConnected ? () => replaySong() : null,
-                backgroundColor: isConnected
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Colors.grey,
+                style: FilledButton.styleFrom(
+                  backgroundColor: isConnected ? Theme.of(context).colorScheme.primaryContainer : Colors.grey,
+                ),
                 child: Icon(Icons.replay),
               ),
             ],
