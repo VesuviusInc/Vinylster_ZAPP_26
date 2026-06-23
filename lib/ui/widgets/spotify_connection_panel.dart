@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import '../../data/services/spotify_service.dart';
 import '../../logic/settings_controller.dart';
 
-class SpotifyConnectionView extends StatelessWidget {
-  const SpotifyConnectionView({super.key});
+class SpotifyConnectionPanel extends StatelessWidget {
+  const SpotifyConnectionPanel({super.key});
 
   @override
   Widget build(BuildContext context) {

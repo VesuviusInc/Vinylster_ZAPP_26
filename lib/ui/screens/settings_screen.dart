@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vinylster_zapp_26/ui/widgets/spotify_connection_view.dart';
+import 'package:vinylster_zapp_26/ui/widgets/spotify_connection_panel.dart';
 import 'package:vinylster_zapp_26/ui/widgets/vinyl_selector.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -23,7 +23,7 @@ class SettingsScreen extends StatelessWidget {
         children: [
           ExpansionTile(
             title: Text("Spotify Settings"),
-            children: [SpotifyConnectionView()],
+            children: [SpotifyConnectionPanel()],
           ),
           ExpansionTile(
             title: Text("Vinyl Record Selection"),
