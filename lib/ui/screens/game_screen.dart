@@ -81,13 +81,29 @@ class GameScreen extends StatelessWidget {
                       right: 16,
                       bottom: 8,
                     ),
-                    text: "Buy cards",
+                    text: "Buy card",
                     icon: Icons.monetization_on_outlined,
                     buttonColor: Theme.of(context).colorScheme.primaryContainer,
                     textStyle: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      try {
+                        gameSession.buyCard();
+                      } catch (e) {
+                        String snackBarText = e.toString().replaceAll(
+                          "Exception: ",
+                          "",
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(snackBarText),
+                            behavior: SnackBarBehavior.floating,
+                          )
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
@@ -130,7 +146,15 @@ class GameScreen extends StatelessWidget {
                     textStyle: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      gameSession.currentPlayer.addToken();
+                      gameSession.currentPlayer.addToken();
+                      gameSession.currentPlayer.addToken();
+                      gameSession.currentPlayer.addToken();
+                      gameSession.currentPlayer.addToken();
+                      gameSession.currentPlayer.addToken();
+                      // no listener will be notified
+                    },
                   ),
                 ],
               ),
@@ -162,23 +186,25 @@ class CustomGameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: margin,
-      decoration: BoxDecoration(
-        color: buttonColor ?? Colors.grey.shade400.withAlpha(150),
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return Padding(
+      padding: margin,
       child: TextButton(
         onPressed: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: buttonColor ?? Colors.grey.shade400.withAlpha(150),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              color: textStyle == null
-                  ? Theme.of(context).colorScheme.primary
-                  : textStyle!.color,
+              color: textStyle?.color ?? Theme.of(context).colorScheme.primary,
             ),
-            SizedBox(width: 5),
+            const SizedBox(width: 8),
             Text(text, style: textStyle),
           ],
         ),

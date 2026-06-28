@@ -12,6 +12,7 @@ class GameSession extends ChangeNotifier {
   final List<Player> _players = [];
   int _activePlayerIndex = 0;
   int requiredCardsToWin = 10;
+  static final int cardPrice = 3;
 
   Track? _currentTrack;
   List<Track> _unplayedTracks = [];
@@ -75,11 +76,11 @@ class GameSession extends ChangeNotifier {
   }
 
   Future<void> start() async {
-    if(_activeTrackRepository == null) {
+    if (_activeTrackRepository == null) {
       throw Exception("No TrackRepository set");
     }
 
-    if(players.isEmpty) {
+    if (players.isEmpty) {
       throw Exception("No players added");
     }
 
@@ -95,14 +96,14 @@ class GameSession extends ChangeNotifier {
   Playlist? get playlist {
     final repo = _activeTrackRepository;
 
-    if(repo is CustomTrackRepository) {
+    if (repo is CustomTrackRepository) {
       return repo.currentPlaylist;
     }
     return null;
   }
 
   Future<void> next() async {
-    if(_activeTrackRepository == null) {
+    if (_activeTrackRepository == null) {
       throw Exception("No TrackRepository set");
     }
 
@@ -111,9 +112,9 @@ class GameSession extends ChangeNotifier {
     }
 
     if (_unplayedTracks.length == 1) {
-      _unplayedTracks.addAll(await _activeTrackRepository!.getRandomTracks(
-        _players.length * 10,
-      ));
+      _unplayedTracks.addAll(
+        await _activeTrackRepository!.getRandomTracks(_players.length * 10),
+      );
     }
 
     _playedTracks.add(_currentTrack!);
@@ -130,4 +131,16 @@ class GameSession extends ChangeNotifier {
   }
 
   void takeGuess() {}
+
+  void buyCard() {
+    if (currentPlayer.amountToken < cardPrice) {
+      throw Exception("Not enough tokens");
+    }
+    currentPlayer.removeTokens(3);
+    Random r = Random();
+    int randomIndex = r.nextInt(_unplayedTracks.length);
+    currentPlayer.tracks.add(_unplayedTracks[randomIndex]);
+    _playedTracks.add(_unplayedTracks[randomIndex]);
+    _unplayedTracks.remove(_unplayedTracks[randomIndex]);
+  }
 }
