@@ -6,9 +6,7 @@ import 'package:vinylster_zapp_26/logic/settings_controller.dart';
 import '../../logic/game_session.dart';
 
 class AudioPlayerControl extends StatefulWidget {
-  final double screenWidth;
-
-  const AudioPlayerControl({super.key, required this.screenWidth});
+  const AudioPlayerControl({super.key});
 
   @override
   State createState() => _AudioPlayerControlState();
@@ -49,7 +47,9 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
 
     if (_animationController.value == 0.0) {
       _animationController.animateTo(1.0);
-      context.read<SpotifyService>().playSong(context.read<GameSession>().currentTrack);
+      context.read<SpotifyService>().playSong(
+        context.read<GameSession>().currentTrack,
+      );
     } else {
       context.read<SpotifyService>().resumeSong();
       _animationController.animateTo(1.0);
@@ -89,7 +89,9 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
           seconds: SpotifyService.songPreviewLengthSeconds,
         );
         _animationController.animateTo(1.0);
-        context.read<SpotifyService>().playSong(context.read<GameSession>().currentTrack);
+        context.read<SpotifyService>().playSong(
+          context.read<GameSession>().currentTrack,
+        );
       });
       _hasBeenReplayed = true;
     }
@@ -99,9 +101,12 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
   Widget build(BuildContext context) {
     final spotifyService = context.watch<SpotifyService>();
     final gameSession = context.watch<GameSession>();
-    final currentTrackIdFromGameSession = gameSession.currentTrack != null ? gameSession.currentTrack!.trackId : "";
+    final currentTrackIdFromGameSession = gameSession.currentTrack != null
+        ? gameSession.currentTrack!.trackId
+        : "";
     final isConnected = spotifyService.isConnected;
     final settingsController = context.watch<SettingsController>();
+    final screenWidth = MediaQuery.of(context).size.width;
 
     // in case the connections drops while playing
     if (_wasConnected == true && !isConnected) {
@@ -131,8 +136,8 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
 
     return Padding(
       padding: EdgeInsets.only(
-        left: widget.screenWidth * 0.25,
-        right: widget.screenWidth * 0.25,
+        left: screenWidth * 0.25,
+        right: screenWidth * 0.25,
       ),
       child: Column(
         children: [
@@ -140,28 +145,28 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
             spacing: 20,
             alignment: WrapAlignment.center,
             children: [
-              FloatingActionButton(
+              FilledButton.tonal(
                 // onPressed = null => button is disabled
                 onPressed: isConnected ? () => pauseSong() : null,
-                backgroundColor: isConnected
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Colors.grey,
+                style: FilledButton.styleFrom(
+                  backgroundColor: isConnected ? Theme.of(context).colorScheme.primaryContainer : Colors.grey,
+                ),
                 child: Icon(Icons.pause),
               ),
-              FloatingActionButton(
+              FilledButton.tonal(
                 // onPressed = null => button is disabled
                 onPressed: isConnected ? () => playSong() : null,
-                backgroundColor: isConnected
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Colors.grey,
+                style: FilledButton.styleFrom(
+                  backgroundColor: isConnected ? Theme.of(context).colorScheme.primaryContainer : Colors.grey,
+                ),
                 child: Icon(Icons.play_arrow),
               ),
-              FloatingActionButton(
+              FilledButton.tonal(
                 // onPressed = null => button is disabled
                 onPressed: isConnected ? () => replaySong() : null,
-                backgroundColor: isConnected
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Colors.grey,
+                style: FilledButton.styleFrom(
+                  backgroundColor: isConnected ? Theme.of(context).colorScheme.primaryContainer : Colors.grey,
+                ),
                 child: Icon(Icons.replay),
               ),
             ],
@@ -175,12 +180,25 @@ class _AudioPlayerControlState extends State<AudioPlayerControl>
                   begin: 0.0,
                   end: 1.0,
                 ).animate(_animationController),
-                child: Image(
-                  image: AssetImage("assets/images/${settingsController.vinylImages[settingsController.selectedVinylImageIndex]}.png"),
-                  width: widget.screenWidth * 0.5 > 500.0
-                      ? 500.0
-                      : widget.screenWidth * 0.5,
-                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 30,
+                        spreadRadius: 5,
+                        offset: const Offset(0, 15)
+                      )
+                    ]
+                  ),
+                  child: Image(
+                    image: AssetImage(
+                      "assets/images/${settingsController.vinylImages[settingsController.selectedVinylImageIndex]}.png",
+                    ),
+                    width: screenWidth * 0.5 > 500.0 ? 500.0 : screenWidth * 0.5,
+                  ),
+                )
               ),
             ],
           ),

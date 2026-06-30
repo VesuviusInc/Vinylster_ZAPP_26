@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/data/models/player.dart';
+import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
-
 
 class LocalGame extends StatefulWidget {
   const LocalGame({super.key});
@@ -84,8 +84,27 @@ class _LocalGameState extends State<LocalGame> {
               const SizedBox(height: 20),
               ElevatedButton(
                 child: const Text('Start Game'),
-                onPressed: () {
-                  context.goNamed('GameScreen');
+                onPressed: () async {
+                  final gameSession = context.read<GameSession>();
+                  gameSession.activeTrackRepository ??= context.read<LocalTrackRepository>();
+                  try {
+                    await gameSession.start();
+                    if(!context.mounted) return;
+
+                    context.goNamed('GameScreen');
+                  } catch (e) {
+                    showDialog(context: context, builder: (BuildContext context) => AlertDialog(
+                      title: const Text("Hoppla!"),
+                      content: Text("No players added! Please add players before starting the game!"),
+                      actions: [
+                        TextButton(onPressed: () => {
+                          Navigator.pop(context, "Ok")
+                        },
+                        child: Text("Ok")
+                        )
+                      ],
+                    ));
+                  }
                 },
               ),
               const SizedBox(height: 50),

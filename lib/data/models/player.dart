@@ -16,8 +16,10 @@ class Player {
     _amountToken++;
   }
 
-  void removeToken() {
-    _amountToken--;
+  void removeTokens(int i) {
+    if(i > 0) {
+      _amountToken-=i;
+    }
   }
 
   List<Track> get tracks => _tracks;
