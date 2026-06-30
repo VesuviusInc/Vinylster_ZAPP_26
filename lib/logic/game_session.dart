@@ -17,6 +17,7 @@ class GameSession extends ChangeNotifier {
   Track? _currentTrack;
   List<Track> _unplayedTracks = [];
   List<Track> _playedTracks = [];
+  List<Track> _skippedTracks = [];
 
   GameSession();
 
@@ -111,6 +112,7 @@ class GameSession extends ChangeNotifier {
       return;
     }
 
+    // get more tracks when unplayed tracks are almost empty
     if (_unplayedTracks.length == 1) {
       _unplayedTracks.addAll(
         await _activeTrackRepository!.getRandomTracks(_players.length * 10),
@@ -130,6 +132,21 @@ class GameSession extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> skipTrack() async {
+    if (_activeTrackRepository == null) {
+      throw Exception("No TrackRepository set");
+    }
+
+    if (_currentTrack == null) {
+      return;
+    }
+
+    _skippedTracks.add(_currentTrack!);
+    _unplayedTracks.remove(_currentTrack);
+    _currentTrack = _unplayedTracks[_unplayedTracks.length -1];
+    notifyListeners();
+  }
+
   void takeGuess() {}
 
   void buyCard() {
@@ -142,5 +159,19 @@ class GameSession extends ChangeNotifier {
     currentPlayer.tracks.add(_unplayedTracks[randomIndex]);
     _playedTracks.add(_unplayedTracks[randomIndex]);
     _unplayedTracks.remove(_unplayedTracks[randomIndex]);
+    notifyListeners();
+  }
+
+  void quit() {
+    _activeTrackRepository = null;
+
+    _players.clear();
+    _activePlayerIndex = 0;
+    requiredCardsToWin = 10;
+
+    _currentTrack = null;
+    _unplayedTracks.clear();
+    _playedTracks.clear();
+    _skippedTracks.clear();
   }
 }

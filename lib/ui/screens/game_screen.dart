@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 import 'package:vinylster_zapp_26/ui/widgets/audio_player_control.dart';
@@ -15,6 +16,32 @@ class GameScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("Vinylster"),
+        leading: IconButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text("Quit game?"),
+                content: Text("Do you really want to quit the game?"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, "Yes");
+                      gameSession.quit();
+                      context.goNamed("Home");
+                    },
+                    child: Text("Yes"),
+                  ),
+                  TextButton(
+                    onPressed: () => {Navigator.pop(context, "No")},
+                    child: Text("No"),
+                  ),
+                ],
+              ),
+            );
+          },
+          icon: const Icon(Icons.keyboard_arrow_left),
+        ),
       ),
       body: Column(
         children: [
@@ -100,7 +127,7 @@ class GameScreen extends StatelessWidget {
                           SnackBar(
                             content: Text(snackBarText),
                             behavior: SnackBarBehavior.floating,
-                          )
+                          ),
                         );
                       }
                     },
@@ -146,19 +173,33 @@ class GameScreen extends StatelessWidget {
                     textStyle: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
-                    onPressed: () {
-                      gameSession.currentPlayer.addToken();
-                      gameSession.currentPlayer.addToken();
-                      gameSession.currentPlayer.addToken();
-                      gameSession.currentPlayer.addToken();
-                      gameSession.currentPlayer.addToken();
-                      gameSession.currentPlayer.addToken();
-                      // no listener will be notified
+                    onPressed: () async {
+                      try {
+                        await gameSession.skipTrack();
+                      } catch (e) {
+                        String snackBarText = e.toString().replaceAll(
+                          "Exception: ",
+                          "",
+                        );
+
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(snackBarText),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
                     },
                   ),
                 ],
               ),
             ],
+          ),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Text("Cards (${gameSession.currentPlayer.tracks.length})"),
           ),
         ],
       ),
