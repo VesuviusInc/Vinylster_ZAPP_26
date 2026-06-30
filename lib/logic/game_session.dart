@@ -18,6 +18,7 @@ class GameSession extends ChangeNotifier {
   List<Track> _unplayedTracks = [];
   List<Track> _playedTracks = [];
   List<Track> _skippedTracks = [];
+  GuessStatus _guessStatus = GuessStatus.none;
 
   GameSession();
 
@@ -32,6 +33,14 @@ class GameSession extends ChangeNotifier {
   List<Player> get players => _players;
 
   Player get currentPlayer => _players[_activePlayerIndex];
+
+
+  GuessStatus get guessStatus => _guessStatus;
+
+  set guessStatus(GuessStatus value) {
+    _guessStatus = value;
+    notifyListeners();
+  }
 
   /// Adds the given [player] to the GameSession players
   ///
@@ -162,6 +171,11 @@ class GameSession extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addTokenToCurrentPlayer() {
+    currentPlayer.addToken();
+    notifyListeners();
+  }
+
   void quit() {
     _activeTrackRepository = null;
 
@@ -174,4 +188,11 @@ class GameSession extends ChangeNotifier {
     _playedTracks.clear();
     _skippedTracks.clear();
   }
+}
+
+// artist and title guess
+enum GuessStatus {
+  none,
+  correct,
+  wrong
 }

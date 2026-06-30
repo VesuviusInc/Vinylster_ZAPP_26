@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
+import 'package:vinylster_zapp_26/ui/screens/choose_artist_and_title.dart';
 import 'package:vinylster_zapp_26/ui/widgets/audio_player_control.dart';
+
+import '../widgets/custom_game_button.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -59,7 +62,7 @@ class GameScreen extends StatelessWidget {
                   children: [
                     Text("Player: "),
                     Text(
-                      currentPlayer.name,
+                      currentPlayer.name.length > 20 ? "${currentPlayer.name.substring(0, 20)}..." : currentPlayer.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(
@@ -99,101 +102,114 @@ class GameScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  CustomGameButton(
-                    margin: EdgeInsets.only(
-                      top: 16,
-                      left: 16,
-                      right: 16,
-                      bottom: 8,
-                    ),
-                    text: "Buy card",
-                    icon: Icons.monetization_on_outlined,
-                    buttonColor: Theme.of(context).colorScheme.primaryContainer,
-                    textStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                    onPressed: () {
-                      try {
-                        gameSession.buyCard();
-                      } catch (e) {
-                        String snackBarText = e.toString().replaceAll(
-                          "Exception: ",
-                          "",
-                        );
+              CustomGameButton(
+                margin: EdgeInsets.only(
+                  top: 16,
+                  left: 16,
+                  right: 16,
+                  bottom: 8,
+                ),
+                text: "Buy card",
+                icon: Icons.monetization_on_outlined,
+                buttonColor: Theme.of(context).colorScheme.primaryContainer,
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+                onPressed: () {
+                  try {
+                    gameSession.buyCard();
+                  } catch (e) {
+                    String snackBarText = e.toString().replaceAll(
+                      "Exception: ",
+                      "",
+                    );
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(snackBarText),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ],
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(snackBarText),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
               ),
-              Column(
-                children: [
-                  CustomGameButton(
-                    margin: EdgeInsets.all(16),
-                    text: "Take guess",
-                    icon: Icons.pan_tool,
-                    textStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    buttonColor: Theme.of(context).colorScheme.primary,
-                    onPressed: () {},
-                  ),
-                  CustomGameButton(
-                    margin: EdgeInsets.only(
-                      top: 8,
-                      left: 16,
-                      right: 16,
-                      bottom: 16,
-                    ),
-                    text: "Appeal",
-                    icon: Icons.block_sharp,
-                    buttonColor: Theme.of(context).colorScheme.primaryContainer,
-                    textStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
+              CustomGameButton(
+                margin: EdgeInsets.all(16),
+                text: "Appeal",
+                icon: Icons.block_sharp,
+                buttonColor: Theme.of(context).colorScheme.primaryContainer,
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+                onPressed: () {},
               ),
-              Column(
-                children: [
-                  CustomGameButton(
-                    margin: EdgeInsets.all(16),
-                    text: "Skip song",
-                    icon: Icons.next_plan_outlined,
-                    buttonColor: Theme.of(context).colorScheme.primaryContainer,
-                    textStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                    onPressed: () async {
-                      try {
-                        await gameSession.skipTrack();
-                      } catch (e) {
-                        String snackBarText = e.toString().replaceAll(
-                          "Exception: ",
-                          "",
-                        );
+              CustomGameButton(
+                margin: EdgeInsets.all(16),
+                text: "Skip song",
+                icon: Icons.next_plan_outlined,
+                buttonColor: Theme.of(context).colorScheme.primaryContainer,
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+                onPressed: () async {
+                  try {
+                    await gameSession.skipTrack();
+                  } catch (e) {
+                    String snackBarText = e.toString().replaceAll(
+                      "Exception: ",
+                      "",
+                    );
 
-                        if (!context.mounted) return;
+                    if (!context.mounted) return;
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(snackBarText),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(snackBarText),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomGameButton(
+                margin: EdgeInsets.all(16),
+                text: "Take guess",
+                icon: Icons.pan_tool,
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                buttonColor: Theme.of(context).colorScheme.primary,
+                onPressed: () {
+                },
+              ),
+              CustomGameButton(
+                margin: EdgeInsets.all(16),
+                text: "Artist & Title",
+                icon: Icons.draw,
+                textStyle: TextStyle(
+                  color: getColorForGuessStatus(gameSession.guessStatus) ?? Theme.of(context).colorScheme.onPrimary,
+                ),
+                buttonColor: Theme.of(context).colorScheme.primary,
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    isDismissible: false,
+                    enableDrag: false,
+                    builder: (context) {
+                      return FractionallySizedBox(
+                        heightFactor: 0.75,
+                        child: const ChooseArtistAndTitle(),
+                      );
                     },
-                  ),
-                ],
+                  );
+
+                },
               ),
             ],
           ),
@@ -205,51 +221,15 @@ class GameScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class CustomGameButton extends StatelessWidget {
-  final String text;
-  final IconData icon;
-  final VoidCallback onPressed;
-  final EdgeInsets margin;
-  final TextStyle? textStyle;
-  final Color? buttonColor;
-
-  const CustomGameButton({
-    super.key,
-    required this.margin,
-    required this.text,
-    required this.icon,
-    required this.onPressed,
-    this.textStyle,
-    this.buttonColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: margin,
-      child: TextButton(
-        onPressed: onPressed,
-        style: TextButton.styleFrom(
-          backgroundColor: buttonColor ?? Colors.grey.shade400.withAlpha(150),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: textStyle?.color ?? Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 8),
-            Text(text, style: textStyle),
-          ],
-        ),
-      ),
-    );
+  Color? getColorForGuessStatus(GuessStatus guessStatus) {
+    switch (guessStatus) {
+      case GuessStatus.none:
+        return null;
+      case GuessStatus.correct:
+        return Colors.green.shade300;
+      case GuessStatus.wrong:
+        return Colors.red.shade300;
+    }
   }
 }
