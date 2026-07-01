@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../data/services/spotify_service.dart';
 import '../../logic/settings_controller.dart';
+import 'package:vinylster_zapp_26/l10n/app_localizations.dart';
 
 class SpotifyConnectionPanel extends StatelessWidget {
   const SpotifyConnectionPanel({super.key});
@@ -10,6 +11,7 @@ class SpotifyConnectionPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final spotifyService = context.watch<SpotifyService>();
+    final localizations = AppLocalizations.of(context);
     SettingsController settings = context.watch<SettingsController>();
 
     return Padding(
@@ -26,7 +28,7 @@ class SpotifyConnectionPanel extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                spotifyService.isConnected ? "Connected to Spotify!" : "Not connected to Spotify!",
+                spotifyService.isConnected ? localizations?.spotifyConnected??'' : localizations?.spotifyNotConnected??'',
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],
@@ -55,7 +57,7 @@ class SpotifyConnectionPanel extends StatelessWidget {
                 );
               }
             },
-            child: Text(spotifyService.isConnected ? 'Disconnect Spotify' : 'Connect to Spotify'),
+            child: Text(spotifyService.isConnected ? localizations?.spotifyDisconnect??'' : localizations?.spotifyConnect??''),
           ),
           const SizedBox(height: 32),
           Container(
@@ -67,8 +69,8 @@ class SpotifyConnectionPanel extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  "Auto connect",
+                Text(
+                  localizations?.spotifyAutoConnect??'',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 16),

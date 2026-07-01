@@ -5,7 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsController extends ChangeNotifier {
   bool autoConnect = false;
   List<String> vinylImages = ["vinyl-default","vinyl-blue", "vinyl-yellow", "vinyl-red"];
+  List<String> availableLanguages = ['en','de'];
   int selectedVinylImageIndex = 0;
+  String selectedLanguageLocale = 'en';
 
   Future<void> loadSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -25,6 +27,13 @@ class SettingsController extends ChangeNotifier {
     selectedVinylImageIndex = index;
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt("selected_vinyl_image_index", index);
+    notifyListeners();
+  }
+
+  Future<void> setSelectedLanguage(String loc) async {
+    selectedLanguageLocale = loc;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("selected_language_locale", loc);
     notifyListeners();
   }
 }

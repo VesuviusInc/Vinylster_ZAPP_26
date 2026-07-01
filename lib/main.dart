@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
 import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
 import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
+import 'package:vinylster_zapp_26/l10n/app_localizations.dart';
 import 'package:vinylster_zapp_26/logic/settings_controller.dart';
 import 'package:vinylster_zapp_26/ui/screens/settings_screen.dart';
-
 import './ui/screens/local_game.dart';
 import './ui/screens/game_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 final _router = GoRouter(
   initialLocation: '/',
@@ -78,6 +79,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      locale: Locale(context.watch<SettingsController>().selectedLanguageLocale),
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       title: 'Vinylster',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       routerConfig: _router,
@@ -90,6 +99,7 @@ class VinylsterHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -100,14 +110,14 @@ class VinylsterHomePage extends StatelessWidget {
           children: [
             const SizedBox(height: 200),
             ElevatedButton(
-              child: const Text('Local Game'),
+              child: Text(localizations?.startGame ?? ''),
               onPressed: () {
                 context.goNamed('LocalGame');
               },
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              child: const Text('Settings'),
+              child: Text(localizations?.settings ?? ''),
               onPressed: () {
                 context.goNamed('Settings');
               },
