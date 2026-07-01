@@ -45,14 +45,14 @@ class _GameTrackSelector extends State<GameTrackSelector> {
                       SizedBox(
                         width: 150,
                         child: Card(
-                          color: context.read<GameSession>().currentPlayer.tracks[index] == context.read<GameSession>().currentTrack?Colors.green:Colors.red,
+                          color: context.read<GameSession>().currentPlayer.tracks[index] == context.read<GameSession>().currentTrack?Theme.of(context).colorScheme.primaryContainer:Theme.of(context).colorScheme.tertiaryContainer,
                           child:
                           Padding(
                             padding: EdgeInsets.all(3),
                             child: Column(
                               children: [
                                 Text(style: TextStyle(fontSize: 20),context.read<GameSession>().currentPlayer.tracks[index].name),
-                                Text(style: TextStyle(color: Colors.white,fontSize: 40), '${context.read<GameSession>().currentPlayer.tracks[index].releaseYear}'),
+                                Text(style: TextStyle(color: Colors.white,fontSize: 40,fontWeight: FontWeight.bold), '${context.read<GameSession>().currentPlayer.tracks[index].releaseYear}'),
                                 Text(style: TextStyle(fontSize: 20), context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ')),
                               ],
                             ),
