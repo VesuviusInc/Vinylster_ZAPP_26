@@ -1,0 +1,12 @@
+{
+  "players": "Players {players_length}/8",
+  "startGame": "Start Game",
+  "settings": "Settings",
+  "vinylRecordSelection": "Vinyl Record Selection",
+  "languageSelection": "Language Selection",
+  "spotifyConnected": "Connected to Spotify!",
+  "spotifyNotConnected": "Not connected to Spotify!",
+  "spotifyDisconnect": "Disconnect Spotify",
+  "spotifyConnect": "Connect to Spotify",
+  "spotifyAutoConnect": "Auto connect"
+}

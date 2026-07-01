@@ -1,0 +1,12 @@
+{
+  "players": "Spieler {players_length}/8",
+  "startGame": "Spiel starten",
+  "settings": "Einstellungen",
+  "vinylRecordSelection": "Vinyl Schallplatten Auswahl",
+  "languageSelection": "Sprachauswahl",
+  "spotifyConnected": "Verbunden mit Spotify!",
+  "spotifyNotConnected": "Nicht Verbunden mit Spotify!",
+  "spotifyDisconnect": "Trennen von Spotify",
+  "spotifyConnect": "Verbinden mit Spotify",
+  "spotifyAutoConnect": "Automatisch verbinden"
+}
