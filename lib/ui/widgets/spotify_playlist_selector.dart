@@ -28,8 +28,6 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
     super.dispose();
   }
 
-  void setPlaylistLink(String link) {}
-
   @override
   Widget build(BuildContext context) {
     // TODO: Add Checkbox for custom playlist

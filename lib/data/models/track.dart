@@ -30,4 +30,10 @@ class Track {
   String toString() {
     return 'Track{TrackId: $_trackId, Title: $_name, Artists: $_artists, ReleaseYear: $_releaseYear}';
   }
+
+  String getArtistsWithFormat() {
+    String formattedString = "";
+    artists.asMap().forEach((index, value) => index != artists.length-1 ? formattedString+="$value, " : formattedString+=value);
+    return formattedString;
+  }
 }
