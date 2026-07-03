@@ -85,6 +85,8 @@ class _LocalGameState extends State<LocalGame> {
               ElevatedButton(
                 child: const Text('Start Game'),
                 onPressed: () async {
+                  FocusScope.of(context).unfocus();
+
                   final gameSession = context.read<GameSession>();
                   gameSession.activeTrackRepository ??= context.read<LocalTrackRepository>();
                   try {

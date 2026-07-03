@@ -46,6 +46,7 @@ class GameScreen extends StatelessWidget {
           icon: const Icon(Icons.keyboard_arrow_left),
         ),
       ),
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Row(
@@ -62,7 +63,9 @@ class GameScreen extends StatelessWidget {
                   children: [
                     Text("Player: "),
                     Text(
-                      currentPlayer.name.length > 20 ? "${currentPlayer.name.substring(0, 20)}..." : currentPlayer.name,
+                      currentPlayer.name.length > 20
+                          ? "${currentPlayer.name.substring(0, 20)}..."
+                          : currentPlayer.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(
@@ -184,31 +187,33 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 buttonColor: Theme.of(context).colorScheme.primary,
-                onPressed: () {
-                },
+                onPressed: () {},
               ),
               CustomGameButton(
                 margin: EdgeInsets.all(16),
                 text: "Artist & Title",
                 icon: Icons.draw,
                 textStyle: TextStyle(
-                  color: getColorForGuessStatus(gameSession.guessStatus) ?? Theme.of(context).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
-                buttonColor: Theme.of(context).colorScheme.primary,
+                buttonColor:
+                    getColorForGuessStatus(gameSession.guessStatus) ??
+                    Theme.of(context).colorScheme.primary,
                 onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    isDismissible: false,
-                    enableDrag: false,
-                    builder: (context) {
-                      return FractionallySizedBox(
-                        heightFactor: 0.75,
-                        child: const ChooseArtistAndTitle(),
-                      );
-                    },
-                  );
-
+                  if(gameSession.guessStatus == GuessStatus.none) {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      isDismissible: false,
+                      enableDrag: false,
+                      builder: (context) {
+                        return FractionallySizedBox(
+                          heightFactor: 0.75,
+                          child: const ChooseArtistAndTitle(),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ],
