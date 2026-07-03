@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
+import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
 import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 
@@ -100,7 +101,6 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
                         }
                         if (!context.mounted) return;
 
-
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(snackBarText),
@@ -141,6 +141,19 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
                   subtitle: Text("${playlist.trackCount} Songs"),
                 ),
               ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                context.read<CustomTrackRepository>().reset();
+                context.read<GameSession>().activeTrackRepository = context.read<LocalTrackRepository>();
+              },
+              child: Text("Reset"),
             ),
           ],
         ],

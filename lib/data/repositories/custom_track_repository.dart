@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 
 class CustomTrackRepository extends ChangeNotifier implements TrackRepository {
   final SpotifyService _spotifyService;
-  final List<Track> _cachedTracks = [];
+  List<Track> _cachedTracks = [];
   Playlist? currentPlaylist;
 
   CustomTrackRepository(this._spotifyService);
@@ -70,5 +70,11 @@ class CustomTrackRepository extends ChangeNotifier implements TrackRepository {
     notifyListeners();
 
     return currentPlaylist;
+  }
+
+  void reset() {
+    _cachedTracks = [];
+    currentPlaylist = null;
+    notifyListeners();
   }
 }

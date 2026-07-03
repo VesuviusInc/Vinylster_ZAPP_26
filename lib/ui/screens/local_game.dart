@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/data/models/player.dart';
 import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
+import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 import 'package:vinylster_zapp_26/ui/widgets/spotify_playlist_selector.dart';
 import 'package:vinylster_zapp_26/l10n/app_localizations.dart';
@@ -31,6 +32,7 @@ class _LocalGameState extends State<LocalGame> {
         title: Text('Create Local Game'),
         leading: IconButton(
             onPressed: () {
+              context.read<GameSession>().quit();
               context.goNamed('Home');
             },
             icon: const Icon(Icons.keyboard_arrow_left)
@@ -128,6 +130,21 @@ class _LocalGameState extends State<LocalGame> {
 
                   final gameSession = context.read<GameSession>();
                   gameSession.activeTrackRepository ??= context.read<LocalTrackRepository>();
+                  if(!context.read<SpotifyService>().isConnected) {
+                    showDialog(context: context, builder: (BuildContext context) => AlertDialog(
+                      title: const Text("Hoppla!"),
+                      content: Text("Not connected to spotify. Please connect to spotify in the settings!"),
+                      actions: [
+                        TextButton(onPressed: () => {
+                          Navigator.pop(context, "Ok")
+                        },
+                            child: Text("Ok")
+                        )
+                      ],
+                    ));
+                    return;
+                  }
+
                   try {
                     await gameSession.start();
                     if(!context.mounted) return;
