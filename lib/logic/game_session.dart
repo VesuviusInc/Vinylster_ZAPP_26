@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
-import 'package:vinylster_zapp_26/data/models/player.dart';
-import 'package:vinylster_zapp_26/data/models/playlist.dart';
-import 'package:vinylster_zapp_26/data/models/track.dart';
-import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
-import 'package:vinylster_zapp_26/data/repositories/track_repository.dart';
+import '../data/models/player.dart';
+import '../data/models/playlist.dart';
+import '../data/models/track.dart';
+import '../data/repositories/custom_track_repository.dart';
+import '../data/repositories/track_repository.dart';
 
 class GameSession extends ChangeNotifier {
   TrackRepository? _activeTrackRepository;

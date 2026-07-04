@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/logic/game_session.dart';
-import 'package:vinylster_zapp_26/ui/screens/choose_artist_and_title.dart';
-import 'package:vinylster_zapp_26/ui/widgets/audio_player_control.dart';
-import 'package:vinylster_zapp_26/ui/widgets/game_track_selector.dart';
-
+import '../../logic/game_session.dart';
+import '../widgets/audio_player_control.dart';
 import '../widgets/custom_game_button.dart';
+import '../widgets/game_track_selector.dart';
+import 'choose_artist_and_title.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});

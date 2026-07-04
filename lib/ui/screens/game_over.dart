@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/logic/game_session.dart';
+import '../../logic/game_session.dart';
 
 class GameOver extends StatelessWidget {
   const GameOver({super.key});

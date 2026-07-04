@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/logic/game_session.dart';
-
+import '../../logic/game_session.dart';
 import '../widgets/custom_game_button.dart';
 
 class ChooseArtistAndTitle extends StatefulWidget {

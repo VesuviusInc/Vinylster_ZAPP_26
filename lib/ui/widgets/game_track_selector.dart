@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/logic/game_session.dart';
 
 import '../../data/services/spotify_service.dart';
+import '../../logic/game_session.dart';
 
 class GameTrackSelector extends StatefulWidget {
   const GameTrackSelector({super.key});

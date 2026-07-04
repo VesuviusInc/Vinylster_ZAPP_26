@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vinylster_zapp_26/ui/widgets/spotify_connection_panel.dart';
-import 'package:vinylster_zapp_26/ui/widgets/vinyl_selector.dart';
-import 'package:vinylster_zapp_26/ui/widgets/language_selector.dart';
-import 'package:vinylster_zapp_26/l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
+import '../widgets/language_selector.dart';
+import '../widgets/spotify_connection_panel.dart';
+import '../widgets/vinyl_selector.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

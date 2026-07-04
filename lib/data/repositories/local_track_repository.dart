@@ -1,5 +1,4 @@
-import 'package:vinylster_zapp_26/data/repositories/track_repository.dart';
-
+import 'package:vinylster/data/repositories/track_repository.dart';
 import '../models/track.dart';
 
 class LocalTrackRepository implements TrackRepository {
