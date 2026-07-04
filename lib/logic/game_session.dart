@@ -34,6 +34,13 @@ class GameSession extends ChangeNotifier {
 
   Player get currentPlayer => _players[_activePlayerIndex];
 
+  List<Track> get playedTracks => _playedTracks;
+
+  List<Track> get skippedTracks => _skippedTracks;
+
+  set playedTracks(List<Track> value) {
+    _playedTracks = value;
+  }
 
   GuessStatus get guessStatus => _guessStatus;
 
@@ -176,6 +183,15 @@ class GameSession extends ChangeNotifier {
   void addTokenToCurrentPlayer() {
     currentPlayer.addToken();
     notifyListeners();
+  }
+
+  bool isGameOver() {
+    for(var player in players) {
+      if (player.tracks.length == requiredCardsToWin) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void quit() {

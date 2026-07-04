@@ -187,7 +187,13 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 buttonColor: Theme.of(context).colorScheme.primary,
-                onPressed: () {},
+                onPressed: () {
+                  gameSession.takeGuess();
+                  gameSession.next();
+                  if(gameSession.isGameOver()) {
+                    context.goNamed("GameOver");
+                  }
+                },
               ),
               CustomGameButton(
                 margin: EdgeInsets.all(16),
