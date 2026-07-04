@@ -26,7 +26,7 @@ class _GameTrackSelector extends State<GameTrackSelector> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 150,
+            height: 100,
             child: Consumer<GameSession>(
               builder: (context, provider, child) {
                 return Expanded(child:
@@ -43,7 +43,7 @@ class _GameTrackSelector extends State<GameTrackSelector> {
                       index: index,
                       child:
                       SizedBox(
-                        width: 150,
+                        width: 100,
                         child: Card(
                           color: context.read<GameSession>().currentPlayer.tracks[index] == context.read<GameSession>().currentTrack?Theme.of(context).colorScheme.primaryContainer:Theme.of(context).colorScheme.tertiaryContainer,
                           child:
@@ -52,13 +52,44 @@ class _GameTrackSelector extends State<GameTrackSelector> {
                             child: Column(
                               children: [
                                 if (context.read<GameSession>().currentPlayer.tracks[index] != context.read<GameSession>().currentTrack) ...[
-                                  Text(style: TextStyle(fontSize: 20),context.read<GameSession>().currentPlayer.tracks[index].name),
-                                  Text(style: TextStyle(color: Colors.white,fontSize: 40,fontWeight: FontWeight.bold), '${context.read<GameSession>().currentPlayer.tracks[index].releaseYear}'),
-                                  Text(style: TextStyle(fontSize: 20), context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ')),]
-                                else ...[
-                                  Text(style: TextStyle(color: Colors.white,fontSize: 40,fontWeight: FontWeight.bold), '?'),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 20,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        context.read<GameSession>().currentPlayer.tracks[index].name.length>35?'${context.read<GameSession>().currentPlayer.tracks[index].name.substring(0,context.read<GameSession>().currentPlayer.tracks[index].name.length ~/ 2)}\n${context.read<GameSession>().currentPlayer.tracks[index].name.substring(context.read<GameSession>().currentPlayer.tracks[index].name.length ~/ 2)}':context.read<GameSession>().currentPlayer.tracks[index].name,
+                                        textAlign: TextAlign.justify,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(style: TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold), '${context.read<GameSession>().currentPlayer.tracks[index].releaseYear}'),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 20,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                          context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ').length>35?'${context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ').substring(0,context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ').length ~/ 2)}\n${context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ').substring(context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ').length ~/ 2)}':context.read<GameSession>().currentPlayer.tracks[index].artists.join(' '),
+                                        textAlign: TextAlign.justify,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ]
-
+                                else ...[
+                                  SizedBox(height: 10,),
+                                  Text(style: TextStyle(color: Colors.white,fontSize: 50,fontWeight: FontWeight.bold), '?'),
+                                ]
                               ],
                             ),
                           ),
