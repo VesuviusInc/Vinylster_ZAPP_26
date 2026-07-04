@@ -72,24 +72,6 @@ Future<void> main() async {
   final settingsController = SettingsController();
   await settingsController.loadSettings();
   final appDocDir = await getApplicationDocumentsDirectory();
-  HistoryDatabaseHelper his = HistoryDatabaseHelper();
-  var uuid = Uuid();
-  String uuid1 = uuid.v4();
-  String uuid2 = uuid.v4();
-
-
-  var g1 = GameHistory(gameID: uuid1, time: DateTime.now().toString(), playerAmount: 6);
-  var g2 = GameHistory(gameID: uuid2, time: DateTime.now().toString(), playerAmount: 8);
-  var play1 = GameHistoryPlayer(gameID: uuid1, name: 'test1');
-  var play2 = GameHistoryPlayer(gameID: uuid1, name: 'test2');
-  var play3 = GameHistoryPlayer(gameID: uuid2, name: 'test3');
-  var play4 = GameHistoryPlayer(gameID: uuid2, name: 'test4');
-  his.insertGameHistory(g1);
-  his.insertGameHistory(g2);
-  his.insertGameHistoryPlayer(play1);
-  his.insertGameHistoryPlayer(play2);
-  his.insertGameHistoryPlayer(play3);
-  his.insertGameHistoryPlayer(play4);
 
   runApp(
     MultiProvider(

@@ -216,7 +216,7 @@ class GameScreen extends StatelessWidget {
                     HistoryDatabaseHelper his = HistoryDatabaseHelper();
                     his.insertGameHistory(GameHistory(gameID: gameUUID, time: DateTime.now().toString(), playerAmount: gameSession.players.length));
                     for(var p in gameSession.players){
-                      his.insertGameHistoryPlayer(GameHistoryPlayer(gameID: gameUUID, name: p.name));
+                      his.insertGameHistoryPlayer(GameHistoryPlayer(gameID: gameUUID, name: p.name, tokenAmount: p.amountToken, trackAmount: p.tracks.length));
                     }
 
                     context.goNamed("GameOver");

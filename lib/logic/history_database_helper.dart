@@ -28,7 +28,6 @@ class HistoryDatabaseHelper {
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path + 'gameHistory.db';
-    await deleteDatabase(path);
     var historyDatabase = await openDatabase(path, version: 1, onCreate: _createTables);
     return historyDatabase;
   }
@@ -36,7 +35,7 @@ class HistoryDatabaseHelper {
   void _createTables(Database db, int newVersion) async {
     if(_database == null) {
       await db.execute(
-          'CREATE TABLE gamePlayerHistory(name TEXT, gameID TEXT, PRIMARY KEY (name, gameID))'
+          'CREATE TABLE gamePlayerHistory(name TEXT, gameID TEXT, trackAmount INTEGER, tokenAmount INTEGER, PRIMARY KEY (name, gameID), FOREIGN KEY(gameID) REFERENCES gameHistory(gameID)))'
       );
       await db.execute(
           'CREATE TABLE gameHistory(gameID TEXT PRIMARY KEY, time TEXT, playerAmount INTEGER)'
@@ -80,8 +79,8 @@ class HistoryDatabaseHelper {
     final List<Map<String, Object?>> gameHistoryPlayerMaps = await db.query('gamePlayerHistory', where: 'gameID = "$gameID"');
 
     return [
-      for (final {'gameID': gameID as String, 'name': name as String} in gameHistoryPlayerMaps)
-        GameHistoryPlayer(gameID: gameID, name: name),
+      for (final {'gameID': gameID as String, 'name': name as String, 'trackAmount': trackAmount as int, 'tokenAmount': tokenAmount as int} in gameHistoryPlayerMaps)
+        GameHistoryPlayer(gameID: gameID, name: name, trackAmount: trackAmount, tokenAmount: tokenAmount),
     ];
   }
 

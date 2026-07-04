@@ -45,6 +45,14 @@ class HistoryPlayerScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Player ${snapshot.data![index].name}', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Text('Tokens: ${snapshot.data![index].tokenAmount.toString()}'),
+                                      SizedBox(width: 10),
+                                      Text('Tracks: ${snapshot.data![index].trackAmount.toString()}')
+                                    ],
+                                  )
                                 ],
                               ),
                             ),
