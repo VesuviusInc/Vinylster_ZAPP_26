@@ -13,6 +13,9 @@ import './ui/screens/local_game.dart';
 import './ui/screens/game_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:vinylster_zapp_26/logic/history_database_helper.dart';
+import 'package:vinylster_zapp_26/data/models/game_history.dart';
+import 'dart:async';
 
 final _router = GoRouter(
   initialLocation: '/',
@@ -48,6 +51,10 @@ Future<void> main() async {
   final settingsController = SettingsController();
   await settingsController.loadSettings();
   final appDocDir = await getApplicationDocumentsDirectory();
+  HistoryDatabaseHelper his = new HistoryDatabaseHelper();
+  var fido = GameHistory(gameID: 2, time: DateTime.now().toString(), playerAmount: 8);
+  his.insertGameHistory(fido);
+  print(await his.getGames());
 
   runApp(
     MultiProvider(
