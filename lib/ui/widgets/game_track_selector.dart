@@ -21,16 +21,15 @@ class _GameTrackSelector extends State<GameTrackSelector> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(25),
+      padding: EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 100,
-            child: Consumer<GameSession>(
+          Consumer<GameSession>(
               builder: (context, provider, child) {
-                return Expanded(child:
-                ReorderableListView.builder(
+                return ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: 100),
+                  child: ReorderableListView.builder(
                   padding: EdgeInsets.only(left: 20),
                   scrollDirection: Axis.horizontal,
                   physics: NeverScrollableScrollPhysics(),
@@ -108,7 +107,6 @@ class _GameTrackSelector extends State<GameTrackSelector> {
                 ),
                 );
               },
-            ),
           ),
         ],
       ),
