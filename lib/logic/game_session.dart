@@ -260,6 +260,8 @@ class GameSession extends ChangeNotifier {
     _playedTracks.clear();
     _skippedTracks.clear();
     guessStatus = GuessStatus.none;
+
+    notifyListeners();
   }
 }
 

@@ -13,6 +13,11 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gameSession = context.watch<GameSession>();
+
+    // guard clause, for quitting
+    if(gameSession.players.isEmpty) {
+      return const Scaffold();
+    }
     final currentPlayer = gameSession.currentPlayer;
 
     return Scaffold(
