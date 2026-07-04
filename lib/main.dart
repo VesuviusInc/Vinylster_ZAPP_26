@@ -10,11 +10,7 @@ import './ui/screens/history_screen.dart';
 import './ui/screens/history_player_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:vinylster/logic/history_database_helper.dart';
-import 'package:vinylster/data/models/game_history.dart';
-import 'package:vinylster/data/models/game_history_player.dart';
 import 'dart:async';
-import 'package:uuid/uuid.dart';
 
 import 'data/repositories/custom_track_repository.dart';
 import 'data/repositories/local_track_repository.dart';

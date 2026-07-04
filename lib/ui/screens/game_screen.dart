@@ -231,7 +231,7 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 buttonColor:
-                getColorForGuessStatus(gameSession.guessStatus) ??
+                    getColorForGuessStatus(gameSession.guessStatus) ??
                     Theme.of(context).colorScheme.primary,
                 onPressed: () {
                   if(gameSession.guessStatus == GuessStatus.none) {
