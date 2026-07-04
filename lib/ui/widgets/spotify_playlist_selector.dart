@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
-import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
-import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
-import 'package:vinylster_zapp_26/logic/game_session.dart';
-
 import '../../data/models/playlist.dart';
+import '../../data/repositories/custom_track_repository.dart';
+import '../../data/repositories/local_track_repository.dart';
+import '../../data/services/spotify_service.dart';
+import '../../logic/game_session.dart';
 
 class SpotifyPlaylistSelector extends StatefulWidget {
   const SpotifyPlaylistSelector({super.key});

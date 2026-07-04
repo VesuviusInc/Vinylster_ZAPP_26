@@ -2,8 +2,8 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:vinylster_zapp_26/data/models/game_history.dart';
-import 'package:vinylster_zapp_26/data/models/game_history_player.dart';
+import 'package:vinylster/data/models/game_history.dart';
+import 'package:vinylster/data/models/game_history_player.dart';
 
 class HistoryDatabaseHelper {
   static HistoryDatabaseHelper? _historyDatabaseHelper;

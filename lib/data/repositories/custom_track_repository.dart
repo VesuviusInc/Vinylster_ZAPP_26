@@ -1,9 +1,10 @@
+import 'package:vinylster/data/repositories/track_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vinylster_zapp_26/data/models/playlist.dart';
-import 'package:vinylster_zapp_26/data/models/track.dart';
-import 'package:vinylster_zapp_26/data/repositories/track_repository.dart';
-import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:flutter/foundation.dart';
+
+import '../models/playlist.dart';
+import '../models/track.dart';
+import '../services/spotify_service.dart';
 
 class CustomTrackRepository extends ChangeNotifier implements TrackRepository {
   final SpotifyService _spotifyService;

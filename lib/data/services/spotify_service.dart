@@ -9,8 +9,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
-import 'package:vinylster_zapp_26/data/models/playlist.dart';
 
+import '../models/playlist.dart';
 import '../models/track.dart';
 
 class SpotifyService extends ChangeNotifier {

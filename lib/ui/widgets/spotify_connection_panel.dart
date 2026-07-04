@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/spotify_service.dart';
+import '../../l10n/app_localizations.dart';
 import '../../logic/settings_controller.dart';
-import 'package:vinylster_zapp_26/l10n/app_localizations.dart';
 
 class SpotifyConnectionPanel extends StatelessWidget {
   const SpotifyConnectionPanel({super.key});

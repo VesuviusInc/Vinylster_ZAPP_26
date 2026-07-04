@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart';
-import 'package:vinylster_zapp_26/data/models/player.dart';
-import 'package:vinylster_zapp_26/data/models/playlist.dart';
-import 'package:vinylster_zapp_26/data/models/track.dart';
-import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
-import 'package:vinylster_zapp_26/data/repositories/track_repository.dart';
+import '../data/models/player.dart';
+import '../data/models/playlist.dart';
+import '../data/models/track.dart';
+import '../data/repositories/custom_track_repository.dart';
+import '../data/repositories/track_repository.dart';
 
 class GameSession extends ChangeNotifier {
   TrackRepository? _activeTrackRepository;
@@ -107,7 +107,19 @@ class GameSession extends ChangeNotifier {
     );
     _activePlayerIndex = Random().nextInt(_players.length);
     _playedTracks = [];
+
+    for (var player in players) {
+      Track track = _unplayedTracks.last;
+      player.addTrack(track);
+      _playedTracks.add(track);
+      _unplayedTracks.remove(track);
+    }
     _currentTrack = _unplayedTracks[_unplayedTracks.length - 1];
+    currentPlayer.tracks.insert(
+      (currentPlayer.tracks.length / 2).floor(),
+      currentTrack!,
+    );
+
     notifyListeners();
   }
 
@@ -147,6 +159,11 @@ class GameSession extends ChangeNotifier {
     // so playerIndex will automatically start over at 0
     _activePlayerIndex = ((_activePlayerIndex + 1) % (_players.length));
     guessStatus = GuessStatus.none;
+
+    currentPlayer.tracks.insert(
+      (currentPlayer.tracks.length / 2).floor(),
+      currentTrack!,
+    );
     notifyListeners();
   }
 
@@ -159,14 +176,51 @@ class GameSession extends ChangeNotifier {
       return;
     }
 
+    // get more tracks when unplayed tracks are almost empty
+    if (_unplayedTracks.length == 1) {
+      _unplayedTracks.addAll(
+        await _activeTrackRepository!.getRandomTracks(_players.length * 10),
+      );
+    }
+
     guessStatus = GuessStatus.none;
+    currentPlayer.tracks.remove(_currentTrack);
+
     _skippedTracks.add(_currentTrack!);
     _unplayedTracks.remove(_currentTrack);
-    _currentTrack = _unplayedTracks[_unplayedTracks.length -1];
+    _currentTrack = _unplayedTracks[_unplayedTracks.length - 1];
+    currentPlayer.tracks.insert(
+      (currentPlayer.tracks.length / 2).floor(),
+      currentTrack!,
+    );
     notifyListeners();
   }
 
-  void takeGuess() {}
+  bool takeGuess() {
+    int index = currentPlayer.tracks.indexOf(currentTrack!);
+    if (currentPlayer.tracks.length == 1) {
+      return true;
+    }
+    bool isCorrect = false;
+
+    if (index == 0) {
+      isCorrect = currentTrack!.releaseYear <= currentPlayer.tracks[1].releaseYear;
+    }
+    else if (index == currentPlayer.tracks.length - 1) {
+      isCorrect = currentTrack!.releaseYear >= currentPlayer.tracks[index - 1].releaseYear;
+    }
+    else {
+      isCorrect = (currentTrack!.releaseYear >= currentPlayer.tracks[index - 1].releaseYear) &&
+          (currentTrack!.releaseYear <= currentPlayer.tracks[index + 1].releaseYear);
+    }
+
+    if (isCorrect) {
+      return true;
+    }
+
+    currentPlayer.tracks.remove(currentTrack!);
+    return false;
+  }
 
   void buyCard() {
     if (currentPlayer.amountToken < cardPrice) {
@@ -187,7 +241,7 @@ class GameSession extends ChangeNotifier {
   }
 
   bool isGameOver() {
-    for(var player in players) {
+    for (var player in players) {
       if (player.tracks.length == requiredCardsToWin) {
         return true;
       }
@@ -207,12 +261,10 @@ class GameSession extends ChangeNotifier {
     _playedTracks.clear();
     _skippedTracks.clear();
     guessStatus = GuessStatus.none;
+
+    notifyListeners();
   }
 }
 
 // artist and title guess
-enum GuessStatus {
-  none,
-  correct,
-  wrong
-}
+enum GuessStatus { none, correct, wrong }

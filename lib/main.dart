@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:vinylster_zapp_26/data/repositories/custom_track_repository.dart';
-import 'package:vinylster_zapp_26/data/repositories/local_track_repository.dart';
-import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
-import 'package:vinylster_zapp_26/logic/game_session.dart';
-import 'package:vinylster_zapp_26/l10n/app_localizations.dart';
-import 'package:vinylster_zapp_26/logic/settings_controller.dart';
-import 'package:vinylster_zapp_26/ui/screens/game_over.dart';
-import 'package:vinylster_zapp_26/ui/screens/settings_screen.dart';
+import 'package:vinylster/ui/screens/game_over.dart';
+import 'package:vinylster/ui/screens/settings_screen.dart';
 import './ui/screens/local_game.dart';
 import './ui/screens/game_screen.dart';
 import './ui/screens/history_screen.dart';
 import './ui/screens/history_player_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:vinylster_zapp_26/logic/history_database_helper.dart';
-import 'package:vinylster_zapp_26/data/models/game_history.dart';
-import 'package:vinylster_zapp_26/data/models/game_history_player.dart';
+import 'package:vinylster/logic/history_database_helper.dart';
+import 'package:vinylster/data/models/game_history.dart';
+import 'package:vinylster/data/models/game_history_player.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
+
+import 'data/repositories/custom_track_repository.dart';
+import 'data/repositories/local_track_repository.dart';
+import 'data/services/spotify_service.dart';
+import 'l10n/app_localizations.dart';
+import 'logic/game_session.dart';
+import 'logic/settings_controller.dart';
 
 final _router = GoRouter(
   initialLocation: '/',

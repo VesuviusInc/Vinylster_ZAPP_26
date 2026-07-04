@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vinylster_zapp_26/l10n/app_localizations.dart';
-import 'package:vinylster_zapp_26/logic/history_database_helper.dart';
-import 'package:vinylster_zapp_26/data/models/game_history_player.dart';
+import 'package:vinylster/l10n/app_localizations.dart';
+import 'package:vinylster/logic/history_database_helper.dart';
+import 'package:vinylster/data/models/game_history_player.dart';
 
 class HistoryPlayerScreen extends StatelessWidget {
   const HistoryPlayerScreen({super.key});

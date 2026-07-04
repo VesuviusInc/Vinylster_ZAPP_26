@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
-import 'package:vinylster_zapp_26/logic/settings_controller.dart';
-
+import '../../data/services/spotify_service.dart';
 import '../../logic/game_session.dart';
+import '../../logic/settings_controller.dart';
 
 class AudioPlayerControl extends StatefulWidget {
   const AudioPlayerControl({super.key});

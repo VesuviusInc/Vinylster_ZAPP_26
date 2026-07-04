@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/logic/settings_controller.dart';
+import '../../logic/settings_controller.dart';
 
 class LanguageSelector extends StatelessWidget {
   const LanguageSelector({super.key});

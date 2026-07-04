@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:uuid/uuid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster_zapp_26/logic/game_session.dart';
-import 'package:vinylster_zapp_26/ui/screens/choose_artist_and_title.dart';
-import 'package:vinylster_zapp_26/ui/widgets/audio_player_control.dart';
-import 'package:vinylster_zapp_26/ui/widgets/game_track_selector.dart';
-import 'package:vinylster_zapp_26/logic/history_database_helper.dart';
-import 'package:vinylster_zapp_26/data/models/game_history.dart';
-import 'package:vinylster_zapp_26/data/models/game_history_player.dart';
+import 'package:vinylster/logic/game_session.dart';
+import 'package:vinylster/ui/screens/choose_artist_and_title.dart';
+import 'package:vinylster/ui/widgets/audio_player_control.dart';
+import 'package:vinylster/ui/widgets/game_track_selector.dart';
+import 'package:vinylster/logic/history_database_helper.dart';
+import 'package:vinylster/data/models/game_history.dart';
+import 'package:vinylster/data/models/game_history_player.dart';
+
+import 'dart:async';
+import 'package:uuid/uuid.dart';
 
 import '../widgets/custom_game_button.dart';
 
