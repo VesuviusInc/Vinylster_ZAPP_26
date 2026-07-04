@@ -122,6 +122,9 @@ class GameScreen extends StatelessWidget {
                 onPressed: () {
                   try {
                     gameSession.buyCard();
+                    if(gameSession.isGameOver()) {
+                      context.goNamed("GameOver");
+                    }
                   } catch (e) {
                     String snackBarText = e.toString().replaceAll(
                       "Exception: ",
@@ -137,7 +140,8 @@ class GameScreen extends StatelessWidget {
                   }
                 },
               ),
-              CustomGameButton(
+              // will maybe be implemented at a later time
+              /*CustomGameButton(
                 margin: EdgeInsets.all(16),
                 text: "Appeal",
                 icon: Icons.block_sharp,
@@ -146,7 +150,7 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
                 onPressed: () {},
-              ),
+              ),*/
               CustomGameButton(
                 margin: EdgeInsets.all(16),
                 text: "Skip song",

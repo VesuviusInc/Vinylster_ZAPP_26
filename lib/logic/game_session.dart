@@ -175,10 +175,23 @@ class GameSession extends ChangeNotifier {
       return;
     }
 
+    // get more tracks when unplayed tracks are almost empty
+    if (_unplayedTracks.length == 1) {
+      _unplayedTracks.addAll(
+        await _activeTrackRepository!.getRandomTracks(_players.length * 10),
+      );
+    }
+
     guessStatus = GuessStatus.none;
+    currentPlayer.tracks.remove(_currentTrack);
+
     _skippedTracks.add(_currentTrack!);
     _unplayedTracks.remove(_currentTrack);
     _currentTrack = _unplayedTracks[_unplayedTracks.length - 1];
+    currentPlayer.tracks.insert(
+      (currentPlayer.tracks.length / 2).floor(),
+      currentTrack!,
+    );
     notifyListeners();
   }
 
