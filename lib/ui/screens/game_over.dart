@@ -100,7 +100,7 @@ class GameOver extends StatelessWidget {
                       children: gameSession.playedTracks.map((track) {
                         return ListTile(
                           dense: true,
-                          title: Text(track.name),
+                          title: Text("${track.name} (${track.releaseYear})"),
                           subtitle: Text(track.getArtistsWithFormat()),
                         );
                       }).toList(),
@@ -117,7 +117,7 @@ class GameOver extends StatelessWidget {
                       children: gameSession.skippedTracks.map((track) {
                         return ListTile(
                           dense: true,
-                          title: Text(track.name),
+                          title: Text("${track.name} (${track.releaseYear})"),
                           subtitle: Text(track.getArtistsWithFormat()),
                         );
                       }).toList(),

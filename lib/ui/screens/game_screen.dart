@@ -189,7 +189,14 @@ class GameScreen extends StatelessWidget {
                 ),
                 buttonColor: Theme.of(context).colorScheme.primary,
                 onPressed: () {
-                  gameSession.takeGuess();
+                  bool isCorrect = gameSession.takeGuess();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(isCorrect ? "Your guess was right!" : "Your guess was wrong!"),
+                      backgroundColor: isCorrect ? Colors.green.shade300 : Colors.red.shade300,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                   gameSession.next();
                   if(gameSession.isGameOver()) {
                     context.goNamed("GameOver");
