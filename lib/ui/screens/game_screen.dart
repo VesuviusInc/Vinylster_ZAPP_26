@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 import 'package:vinylster_zapp_26/ui/widgets/audio_player_control.dart';
+import 'package:vinylster_zapp_26/ui/widgets/game_track_selector.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -198,9 +199,10 @@ class GameScreen extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(8),
             child: Text("Cards (${gameSession.currentPlayer.tracks.length})"),
           ),
+          GameTrackSelector(),
         ],
       ),
     );

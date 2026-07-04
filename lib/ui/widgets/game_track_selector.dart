@@ -51,9 +51,14 @@ class _GameTrackSelector extends State<GameTrackSelector> {
                             padding: EdgeInsets.all(3),
                             child: Column(
                               children: [
-                                Text(style: TextStyle(fontSize: 20),context.read<GameSession>().currentPlayer.tracks[index].name),
-                                Text(style: TextStyle(color: Colors.white,fontSize: 40,fontWeight: FontWeight.bold), '${context.read<GameSession>().currentPlayer.tracks[index].releaseYear}'),
-                                Text(style: TextStyle(fontSize: 20), context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ')),
+                                if (context.read<GameSession>().currentPlayer.tracks[index] != context.read<GameSession>().currentTrack) ...[
+                                  Text(style: TextStyle(fontSize: 20),context.read<GameSession>().currentPlayer.tracks[index].name),
+                                  Text(style: TextStyle(color: Colors.white,fontSize: 40,fontWeight: FontWeight.bold), '${context.read<GameSession>().currentPlayer.tracks[index].releaseYear}'),
+                                  Text(style: TextStyle(fontSize: 20), context.read<GameSession>().currentPlayer.tracks[index].artists.join(' ')),]
+                                else ...[
+                                  Text(style: TextStyle(color: Colors.white,fontSize: 40,fontWeight: FontWeight.bold), '?'),
+                                ]
+
                               ],
                             ),
                           ),
