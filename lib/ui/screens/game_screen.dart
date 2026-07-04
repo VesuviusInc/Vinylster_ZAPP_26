@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 import 'package:vinylster_zapp_26/ui/screens/choose_artist_and_title.dart';
 import 'package:vinylster_zapp_26/ui/widgets/audio_player_control.dart';
+import 'package:vinylster_zapp_26/ui/widgets/game_track_selector.dart';
 
 import '../widgets/custom_game_button.dart';
 
@@ -187,7 +188,13 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 buttonColor: Theme.of(context).colorScheme.primary,
-                onPressed: () {},
+                onPressed: () {
+                  gameSession.takeGuess();
+                  gameSession.next();
+                  if(gameSession.isGameOver()) {
+                    context.goNamed("GameOver");
+                  }
+                },
               ),
               CustomGameButton(
                 margin: EdgeInsets.all(16),
@@ -219,9 +226,10 @@ class GameScreen extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(8),
             child: Text("Cards (${gameSession.currentPlayer.tracks.length})"),
           ),
+          GameTrackSelector(),
         ],
       ),
     );

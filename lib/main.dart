@@ -8,6 +8,7 @@ import 'package:vinylster_zapp_26/data/services/spotify_service.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 import 'package:vinylster_zapp_26/l10n/app_localizations.dart';
 import 'package:vinylster_zapp_26/logic/settings_controller.dart';
+import 'package:vinylster_zapp_26/ui/screens/game_over.dart';
 import 'package:vinylster_zapp_26/ui/screens/settings_screen.dart';
 import './ui/screens/local_game.dart';
 import './ui/screens/game_screen.dart';
@@ -39,6 +40,11 @@ final _router = GoRouter(
       name: 'GameScreen',
       path: '/gamescreen',
       builder: (context, state) => const GameScreen(),
+    ),
+    GoRoute(
+      name: "GameOver",
+      path: "/gameover",
+      builder: (context, state) => const GameOver(),
     ),
   ],
 );
