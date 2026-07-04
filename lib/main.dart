@@ -6,8 +6,11 @@ import 'package:vinylster/ui/screens/game_over.dart';
 import 'package:vinylster/ui/screens/settings_screen.dart';
 import './ui/screens/local_game.dart';
 import './ui/screens/game_screen.dart';
+import './ui/screens/history_screen.dart';
+import './ui/screens/history_player_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'dart:async';
 
 import 'data/repositories/custom_track_repository.dart';
 import 'data/repositories/local_track_repository.dart';
@@ -38,6 +41,16 @@ final _router = GoRouter(
       name: 'GameScreen',
       path: '/gamescreen',
       builder: (context, state) => const GameScreen(),
+    ),
+    GoRoute(
+      name: 'HistoryScreen',
+      path: '/historyscreen',
+      builder: (context, state) => const HistoryScreen(),
+    ),
+    GoRoute(
+      name: 'HistoryPlayerScreen',
+      path: '/historyplayerscreen',
+      builder: (context, state) => const HistoryPlayerScreen(),
     ),
     GoRoute(
       name: "GameOver",
@@ -127,6 +140,13 @@ class VinylsterHomePage extends StatelessWidget {
               child: Text(localizations?.settings ?? ''),
               onPressed: () {
                 context.goNamed('Settings');
+              },
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              child: Text('History'),
+              onPressed: () {
+                context.goNamed('HistoryScreen');
               },
             ),
           ],

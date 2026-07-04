@@ -6,6 +6,10 @@ import '../widgets/audio_player_control.dart';
 import '../widgets/custom_game_button.dart';
 import '../widgets/game_track_selector.dart';
 import 'choose_artist_and_title.dart';
+import 'package:vinylster/logic/history_database_helper.dart';
+import 'package:vinylster/data/models/game_history.dart';
+import 'package:vinylster/data/models/game_history_player.dart';
+import 'package:uuid/uuid.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -207,6 +211,14 @@ class GameScreen extends StatelessWidget {
                   );
                   gameSession.next();
                   if(gameSession.isGameOver()) {
+                    var uuid = Uuid();
+                    String gameUUID = uuid.v4();
+                    HistoryDatabaseHelper his = HistoryDatabaseHelper();
+                    his.insertGameHistory(GameHistory(gameID: gameUUID, time: DateTime.now().toString(), playerAmount: gameSession.players.length));
+                    for(var p in gameSession.players){
+                      his.insertGameHistoryPlayer(GameHistoryPlayer(gameID: gameUUID, name: p.name, tokenAmount: p.amountToken, trackAmount: p.tracks.length));
+                    }
+
                     context.goNamed("GameOver");
                   }
                 },
