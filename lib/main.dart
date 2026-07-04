@@ -12,11 +12,15 @@ import 'package:vinylster_zapp_26/ui/screens/game_over.dart';
 import 'package:vinylster_zapp_26/ui/screens/settings_screen.dart';
 import './ui/screens/local_game.dart';
 import './ui/screens/game_screen.dart';
+import './ui/screens/history_screen.dart';
+import './ui/screens/history_player_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vinylster_zapp_26/logic/history_database_helper.dart';
 import 'package:vinylster_zapp_26/data/models/game_history.dart';
+import 'package:vinylster_zapp_26/data/models/game_history_player.dart';
 import 'dart:async';
+import 'package:uuid/uuid.dart';
 
 final _router = GoRouter(
   initialLocation: '/',
@@ -42,6 +46,16 @@ final _router = GoRouter(
       builder: (context, state) => const GameScreen(),
     ),
     GoRoute(
+      name: 'HistoryScreen',
+      path: '/historyscreen',
+      builder: (context, state) => const HistoryScreen(),
+    ),
+    GoRoute(
+      name: 'HistoryPlayerScreen',
+      path: '/historyplayerscreen',
+      builder: (context, state) => const HistoryPlayerScreen(),
+    ),
+    GoRoute(
       name: "GameOver",
       path: "/gameover",
       builder: (context, state) => const GameOver(),
@@ -58,9 +72,23 @@ Future<void> main() async {
   await settingsController.loadSettings();
   final appDocDir = await getApplicationDocumentsDirectory();
   HistoryDatabaseHelper his = new HistoryDatabaseHelper();
-  var fido = GameHistory(gameID: 2, time: DateTime.now().toString(), playerAmount: 8);
-  his.insertGameHistory(fido);
-  print(await his.getGames());
+  var uuid = Uuid();
+  String uuid1 = uuid.v4();
+  String uuid2 = uuid.v4();
+
+
+  var g1 = GameHistory(gameID: uuid1, time: DateTime.now().toString(), playerAmount: 6);
+  var g2 = GameHistory(gameID: uuid2, time: DateTime.now().toString(), playerAmount: 8);
+  var play1 = GameHistoryPlayer(gameID: uuid1, name: 'test1');
+  var play2 = GameHistoryPlayer(gameID: uuid1, name: 'test2');
+  var play3 = GameHistoryPlayer(gameID: uuid2, name: 'test3');
+  var play4 = GameHistoryPlayer(gameID: uuid2, name: 'test4');
+  his.insertGameHistory(g1);
+  his.insertGameHistory(g2);
+  his.insertGameHistoryPlayer(play1);
+  his.insertGameHistoryPlayer(play2);
+  his.insertGameHistoryPlayer(play3);
+  his.insertGameHistoryPlayer(play4);
 
   runApp(
     MultiProvider(
@@ -133,6 +161,13 @@ class VinylsterHomePage extends StatelessWidget {
               child: Text(localizations?.settings ?? ''),
               onPressed: () {
                 context.goNamed('Settings');
+              },
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              child: Text('History'),
+              onPressed: () {
+                context.goNamed('HistoryScreen');
               },
             ),
           ],

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:uuid/uuid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vinylster_zapp_26/logic/game_session.dart';
 import 'package:vinylster_zapp_26/ui/screens/choose_artist_and_title.dart';
 import 'package:vinylster_zapp_26/ui/widgets/audio_player_control.dart';
 import 'package:vinylster_zapp_26/ui/widgets/game_track_selector.dart';
+import 'package:vinylster_zapp_26/logic/history_database_helper.dart';
+import 'package:vinylster_zapp_26/data/models/game_history.dart';
+import 'package:vinylster_zapp_26/data/models/game_history_player.dart';
 
 import '../widgets/custom_game_button.dart';
 
@@ -188,10 +193,18 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 buttonColor: Theme.of(context).colorScheme.primary,
-                onPressed: () {
+                onPressed: () async {
                   gameSession.takeGuess();
                   gameSession.next();
                   if(gameSession.isGameOver()) {
+                    var uuid = Uuid();
+                    String gameUUID = uuid.v4();
+
+                    HistoryDatabaseHelper his = new HistoryDatabaseHelper();
+                    his.insertGameHistory(GameHistory(gameID: gameUUID, time: DateTime.now().toString(), playerAmount: gameSession.players.length));
+                    for(var p in gameSession.players){
+                      his.insertGameHistoryPlayer(GameHistoryPlayer(gameID: gameUUID, name: p.name));
+                    }
                     context.goNamed("GameOver");
                   }
                 },

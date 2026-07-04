@@ -1,5 +1,5 @@
 class GameHistory {
-  final int gameID;
+  final String gameID;
   final String time;
   final int playerAmount;
 

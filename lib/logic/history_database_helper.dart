@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:vinylster_zapp_26/data/models/game_history.dart';
+import 'package:vinylster_zapp_26/data/models/game_history_player.dart';
 
 class HistoryDatabaseHelper {
   static HistoryDatabaseHelper? _historyDatabaseHelper;
@@ -27,15 +28,20 @@ class HistoryDatabaseHelper {
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path + 'gameHistory.db';
+    await deleteDatabase(path);
     var historyDatabase = await openDatabase(path, version: 1, onCreate: _createTables);
     return historyDatabase;
   }
 
   void _createTables(Database db, int newVersion) async {
-    await db.execute(
-      '''CREATE TABLE gameHistory(gameID INTEGER PRIMARY KEY, time TEXT, playerAmount INTEGER);
-         CREATE TABLE gamePlayerHistory(name TEXT, gameID INTEGER, FOREIGN KEY(gameID) REFERENCES gameHistory(id))'''
-    );
+    if(_database == null) {
+      await db.execute(
+          'CREATE TABLE gamePlayerHistory(name TEXT, gameID TEXT, PRIMARY KEY (name, gameID))'
+      );
+      await db.execute(
+          'CREATE TABLE gameHistory(gameID TEXT PRIMARY KEY, time TEXT, playerAmount INTEGER)'
+      );
+    }
   }
 
   Future<void> insertGameHistory(GameHistory gameHistory) async {
@@ -44,7 +50,15 @@ class HistoryDatabaseHelper {
     await db.insert(
       'gameHistory',
       gameHistory.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> insertGameHistoryPlayer(GameHistoryPlayer gameHistoryPlayer) async {
+    final db = await database;
+
+    await db.insert(
+      'gamePlayerHistory',
+      gameHistoryPlayer.toMap(),
     );
   }
 
@@ -55,8 +69,19 @@ class HistoryDatabaseHelper {
     final List<Map<String, Object?>> gameHistoryMaps = await db.query('gameHistory');
 
     return [
-      for (final {'gameID': gameID as int, 'time': time as String, 'playerAmount': playerAmount as int} in gameHistoryMaps)
+      for (final {'gameID': gameID as String, 'time': time as String, 'playerAmount': playerAmount as int} in gameHistoryMaps)
         GameHistory(gameID: gameID, time: time, playerAmount: playerAmount),
+    ];
+  }
+
+  Future<List<GameHistoryPlayer>> getPlayersByGame(String gameID) async {
+    final db = await database;
+
+    final List<Map<String, Object?>> gameHistoryPlayerMaps = await db.query('gamePlayerHistory', where: 'gameID = "${gameID}"');
+
+    return [
+      for (final {'gameID': gameID as String, 'name': name as String} in gameHistoryPlayerMaps)
+        GameHistoryPlayer(gameID: gameID, name: name),
     ];
   }
 
