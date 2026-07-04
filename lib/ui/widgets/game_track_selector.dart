@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../data/services/spotify_service.dart';
 import '../../logic/game_session.dart';
 
 class GameTrackSelector extends StatefulWidget {

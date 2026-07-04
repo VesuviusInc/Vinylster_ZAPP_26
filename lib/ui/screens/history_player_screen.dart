@@ -10,7 +10,7 @@ class HistoryPlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    HistoryDatabaseHelper his = new HistoryDatabaseHelper();
+    HistoryDatabaseHelper his = HistoryDatabaseHelper();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

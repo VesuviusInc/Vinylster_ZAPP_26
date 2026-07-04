@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:vinylster/logic/game_session.dart';
-import 'package:vinylster/ui/screens/choose_artist_and_title.dart';
-import 'package:vinylster/ui/widgets/audio_player_control.dart';
-import 'package:vinylster/ui/widgets/game_track_selector.dart';
+import '../../logic/game_session.dart';
+import '../widgets/audio_player_control.dart';
+import '../widgets/custom_game_button.dart';
+import '../widgets/game_track_selector.dart';
+import 'choose_artist_and_title.dart';
 import 'package:vinylster/logic/history_database_helper.dart';
 import 'package:vinylster/data/models/game_history.dart';
 import 'package:vinylster/data/models/game_history_player.dart';
-
-import 'dart:async';
 import 'package:uuid/uuid.dart';
-
-import '../widgets/custom_game_button.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -20,6 +17,11 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gameSession = context.watch<GameSession>();
+
+    // guard clause, for quitting
+    if(gameSession.players.isEmpty) {
+      return const Scaffold();
+    }
     final currentPlayer = gameSession.currentPlayer;
 
     return Scaffold(
@@ -128,6 +130,9 @@ class GameScreen extends StatelessWidget {
                 onPressed: () {
                   try {
                     gameSession.buyCard();
+                    if(gameSession.isGameOver()) {
+                      context.goNamed("GameOver");
+                    }
                   } catch (e) {
                     String snackBarText = e.toString().replaceAll(
                       "Exception: ",
@@ -143,7 +148,8 @@ class GameScreen extends StatelessWidget {
                   }
                 },
               ),
-              CustomGameButton(
+              // will maybe be implemented at a later time
+              /*CustomGameButton(
                 margin: EdgeInsets.all(16),
                 text: "Appeal",
                 icon: Icons.block_sharp,
@@ -152,7 +158,7 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
                 onPressed: () {},
-              ),
+              ),*/
               CustomGameButton(
                 margin: EdgeInsets.all(16),
                 text: "Skip song",
@@ -194,18 +200,25 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 buttonColor: Theme.of(context).colorScheme.primary,
-                onPressed: () async {
-                  gameSession.takeGuess();
+                onPressed: () {
+                  bool isCorrect = gameSession.takeGuess();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(isCorrect ? "Your guess was right!" : "Your guess was wrong!"),
+                      backgroundColor: isCorrect ? Colors.green.shade300 : Colors.red.shade300,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                   gameSession.next();
                   if(gameSession.isGameOver()) {
                     var uuid = Uuid();
                     String gameUUID = uuid.v4();
-
-                    HistoryDatabaseHelper his = new HistoryDatabaseHelper();
+                    HistoryDatabaseHelper his = HistoryDatabaseHelper();
                     his.insertGameHistory(GameHistory(gameID: gameUUID, time: DateTime.now().toString(), playerAmount: gameSession.players.length));
                     for(var p in gameSession.players){
                       his.insertGameHistoryPlayer(GameHistoryPlayer(gameID: gameUUID, name: p.name));
                     }
+
                     context.goNamed("GameOver");
                   }
                 },
@@ -218,7 +231,7 @@ class GameScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 buttonColor:
-                    getColorForGuessStatus(gameSession.guessStatus) ??
+                getColorForGuessStatus(gameSession.guessStatus) ??
                     Theme.of(context).colorScheme.primary,
                 onPressed: () {
                   if(gameSession.guessStatus == GuessStatus.none) {

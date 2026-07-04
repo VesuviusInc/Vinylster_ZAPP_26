@@ -77,7 +77,7 @@ class HistoryDatabaseHelper {
   Future<List<GameHistoryPlayer>> getPlayersByGame(String gameID) async {
     final db = await database;
 
-    final List<Map<String, Object?>> gameHistoryPlayerMaps = await db.query('gamePlayerHistory', where: 'gameID = "${gameID}"');
+    final List<Map<String, Object?>> gameHistoryPlayerMaps = await db.query('gamePlayerHistory', where: 'gameID = "$gameID"');
 
     return [
       for (final {'gameID': gameID as String, 'name': name as String} in gameHistoryPlayerMaps)

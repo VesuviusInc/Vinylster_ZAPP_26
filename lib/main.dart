@@ -72,7 +72,7 @@ Future<void> main() async {
   final settingsController = SettingsController();
   await settingsController.loadSettings();
   final appDocDir = await getApplicationDocumentsDirectory();
-  HistoryDatabaseHelper his = new HistoryDatabaseHelper();
+  HistoryDatabaseHelper his = HistoryDatabaseHelper();
   var uuid = Uuid();
   String uuid1 = uuid.v4();
   String uuid2 = uuid.v4();
