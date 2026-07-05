@@ -17,7 +17,7 @@ class GameSession extends ChangeNotifier {
   Track? _currentTrack;
   List<Track> _unplayedTracks = [];
   List<Track> _playedTracks = [];
-  List<Track> _skippedTracks = [];
+  final List<Track> _skippedTracks = [];
   GuessStatus _guessStatus = GuessStatus.none;
 
   GameSession();

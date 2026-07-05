@@ -14,7 +14,7 @@ class HistoryPlayerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Game ${GoRouterState.of(context).extra!.toString().split(' ')[1]}'),
+        title: Text(localizations?.game(GoRouterState.of(context).extra!.toString().split(' ')[1]) ?? ''),
         leading: IconButton(
             onPressed: () {
               context.goNamed('HistoryScreen');
@@ -44,13 +44,13 @@ class HistoryPlayerScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Player ${snapshot.data![index].name}', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  Text(localizations?.playerHistory(snapshot.data![index].name) ?? '', style: TextStyle(fontWeight: FontWeight.bold)),
                                   SizedBox(height: 5),
                                   Row(
                                     children: [
                                       Text('Tokens: ${snapshot.data![index].tokenAmount.toString()}'),
                                       SizedBox(width: 10),
-                                      Text('Tracks: ${snapshot.data![index].trackAmount.toString()}')
+                                      Text(localizations?.track(snapshot.data![index].trackAmount.toString()) ?? '' )
                                     ],
                                   )
                                 ],

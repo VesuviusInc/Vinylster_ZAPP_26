@@ -21,11 +21,14 @@ class LanguageSelector extends StatelessWidget {
           onTap: () {
               settingsController.setSelectedLanguage(settingsController.availableLanguages[index]);
           },
-            child: Padding(padding: EdgeInsets.only(bottom: 10), child:
+            child: Padding(padding: EdgeInsets.all(10), child:
             Container(
               height: 30,
-              padding: EdgeInsets.all(3),
-              color: isSelected?Theme.of(context).primaryColor.withValues(alpha: .5):Theme.of(context).secondaryHeaderColor.withValues(alpha: .5),
+              padding: EdgeInsets.fromLTRB(6,4,6,6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                color: isSelected?Theme.of(context).primaryColor.withValues(alpha: .5):Theme.of(context).secondaryHeaderColor.withValues(alpha: .5),
+              ),
               child: Text(settingsController.availableLanguages[index]=='en'?'English':'Deutsch'),
             ),
             ),

@@ -8,5 +8,16 @@
   "spotifyNotConnected": "Nicht Verbunden mit Spotify!",
   "spotifyDisconnect": "Trennen von Spotify",
   "spotifyConnect": "Verbinden mit Spotify",
-  "spotifyAutoConnect": "Automatisch verbinden"
+  "spotifyAutoConnect": "Automatisch verbinden",
+  "history": "Geschichte",
+  "game": "Spiel {index}",
+  "playersHistory": "Spieler: {players_length}",
+  "playerHistory": "Spieler {player_name}",
+  "track": "Songs: {track_length}",
+  "createGame": "Spiel erstellen",
+  "addPlayers": "Spieler hinzufügen",
+  "selectPlaylist": "Playlist auswählen",
+  "startGame": "Spiel starten",
+  "save": "Speichern",
+  "close": "Schließen"
 }

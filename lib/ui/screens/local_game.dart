@@ -29,7 +29,7 @@ class _LocalGameState extends State<LocalGame> {
     final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Local Game'),
+        title: Text(localizations?.createGame ?? ''),
         leading: IconButton(
             onPressed: () {
               context.read<GameSession>().quit();
@@ -38,41 +38,35 @@ class _LocalGameState extends State<LocalGame> {
             icon: const Icon(Icons.keyboard_arrow_left)
         ),
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(0, 5, 0, 25),
+        child: Center(
           child: Column(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 70,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                        controller: myController
-                      ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+                child:SizedBox(
+                  width: 500,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
                     ),
-                    Expanded(flex: 10, child: const Text(''),),
-                    Expanded(
-                      flex: 20,
-                      child: Consumer<GameSession>(
-                          builder: (context, provider, child) {
-                            return OutlinedButton(
-                              onPressed: context.read<GameSession>().getPlayers().length<8?() {
-                                context.read<GameSession>().addPlayer(Player(myController.text));
-                              }:null,
-                              style: ButtonStyle(
-                                foregroundColor: context.read<GameSession>().getPlayers().length<8?null:WidgetStateProperty.all<Color>(Colors.red),
-                              ),
-                              child: const Text("Add Players"),
-                            );
-                          }
-                      ),
-                    ),
-                  ],
+                    controller: myController
+                  ),
                 ),
+              ),
+              Consumer<GameSession>(
+                builder: (context, provider, child) {
+                  return OutlinedButton(
+                    onPressed: context.read<GameSession>().getPlayers().length<8?() {
+                      context.read<GameSession>().addPlayer(Player(myController.text));
+                    }:null,
+                    style: ButtonStyle(
+                      foregroundColor: context.read<GameSession>().getPlayers().length<8?null:WidgetStateProperty.all<Color>(Colors.red),
+                    ),
+                    child: Text(localizations?.addPlayers ?? ''),
+                  );
+                }
               ),
               const SizedBox(height: 20),
               Consumer<GameSession>(
@@ -113,18 +107,18 @@ class _LocalGameState extends State<LocalGame> {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: const Text('Close'),
+                            child: Text(localizations?.close ?? ''),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ),
-                child: const Text('Select Playlist'),
+                child: Text(localizations?.selectPlaylist ?? ''),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                child: const Text('Start Game'),
+                child: Text(localizations?.startGame ?? ''),
                 onPressed: () async {
                   FocusScope.of(context).unfocus();
 
@@ -168,6 +162,7 @@ class _LocalGameState extends State<LocalGame> {
             ],
           )
         ),
-      );
+      ),
+    );
   }
 }

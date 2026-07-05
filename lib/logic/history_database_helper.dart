@@ -35,7 +35,7 @@ class HistoryDatabaseHelper {
   void _createTables(Database db, int newVersion) async {
     if(_database == null) {
       await db.execute(
-          'CREATE TABLE gamePlayerHistory(name TEXT, gameID TEXT, trackAmount INTEGER, tokenAmount INTEGER, PRIMARY KEY (name, gameID), FOREIGN KEY(gameID) REFERENCES gameHistory(gameID)))'
+          'CREATE TABLE gamePlayerHistory(name TEXT, gameID TEXT, trackAmount INTEGER, tokenAmount INTEGER, PRIMARY KEY (name, gameID))'
       );
       await db.execute(
           'CREATE TABLE gameHistory(gameID TEXT PRIMARY KEY, time TEXT, playerAmount INTEGER)'

@@ -5,6 +5,7 @@ import '../../data/repositories/custom_track_repository.dart';
 import '../../data/repositories/local_track_repository.dart';
 import '../../data/services/spotify_service.dart';
 import '../../logic/game_session.dart';
+import '../../l10n/app_localizations.dart';
 
 class SpotifyPlaylistSelector extends StatefulWidget {
   const SpotifyPlaylistSelector({super.key});
@@ -35,6 +36,7 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
     // not checked => no custom playlist
     final width = MediaQuery.of(context).size.width;
     Playlist? playlist = context.watch<CustomTrackRepository>().currentPlaylist;
+    final localizations = AppLocalizations.of(context);
 
     return Padding(
       padding: EdgeInsets.all(width * 0.15),
@@ -108,7 +110,7 @@ class _SpotifyPlaylistSelectorState extends State<SpotifyPlaylistSelector> {
                         );
                       }
                     },
-                    child: const Text("Save"),
+                    child: Text(localizations?.save ?? ''),
                   ),
                 ),
               ],
