@@ -1,17 +1,12 @@
 # vinylster_zapp_26
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+How to get Vinylister working (Only on Android!):
+1. Clone project
+2. Open in AndroidStudio
+3. Execute flutter pub get
+4. Create assets/.env file with assets/.env.example as template (You find the CLIENT_ID in the project documentation)
+5. Install Spotify-App for Android and login
+6. Connect device/emulator
+7. Select device/emulator in AndroidStudio and click run
+8. App should be loaded on to the device/emulator and start up
+9. Don't forget to connect to spotify in the Vinylster settings
