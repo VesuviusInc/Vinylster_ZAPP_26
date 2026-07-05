@@ -61,7 +61,7 @@ class CustomTrackRepository extends ChangeNotifier implements TrackRepository {
       currentPlaylist = null;
       rethrow;
     }
-      if(fetchedPlaylist!.trackCount < 10) {
+      if(fetchedPlaylist.trackCount < 10) {
         throw Exception("Too few songs to use this playlist. Please choose another one!");
       }
 

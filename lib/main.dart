@@ -144,7 +144,7 @@ class VinylsterHomePage extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              child: Text('History'),
+              child: Text(localizations?.history ?? ''),
               onPressed: () {
                 context.goNamed('HistoryScreen');
               },

@@ -12,22 +12,18 @@ class HistoryDatabaseHelper {
   HistoryDatabaseHelper._createInstance();
 
   factory HistoryDatabaseHelper() {
-    if(_historyDatabaseHelper == null) {
-      _historyDatabaseHelper = HistoryDatabaseHelper._createInstance();
-    }
+    _historyDatabaseHelper ??= HistoryDatabaseHelper._createInstance();
     return _historyDatabaseHelper!;
   }
 
   Future<Database> get database async {
-    if (_database == null) {
-      _database = await initializeDatabase();
-    }
+    _database ??= await initializeDatabase();
     return _database!;
   }
 
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path + 'gameHistory.db';
+    String path = '${directory.path}gameHistory.db';
     var historyDatabase = await openDatabase(path, version: 1, onCreate: _createTables);
     return historyDatabase;
   }

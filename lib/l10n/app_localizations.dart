@@ -154,6 +154,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Auto connect'**
   String get spotifyAutoConnect;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @game.
+  ///
+  /// In en, this message translates to:
+  /// **'Game {index}'**
+  String game(Object index);
+
+  /// No description provided for @playersHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Players: {players_length}'**
+  String playersHistory(Object players_length);
+
+  /// No description provided for @playerHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Player {player_name}'**
+  String playerHistory(Object player_name);
+
+  /// No description provided for @track.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks: {track_length}'**
+  String track(Object track_length);
+
+  /// No description provided for @createGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Game'**
+  String get createGame;
+
+  /// No description provided for @addPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Players'**
+  String get addPlayers;
+
+  /// No description provided for @selectPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Playlist'**
+  String get selectPlaylist;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

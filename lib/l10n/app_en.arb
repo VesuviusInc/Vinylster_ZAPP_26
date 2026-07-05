@@ -8,5 +8,16 @@
   "spotifyNotConnected": "Not connected to Spotify!",
   "spotifyDisconnect": "Disconnect Spotify",
   "spotifyConnect": "Connect to Spotify",
-  "spotifyAutoConnect": "Auto connect"
+  "spotifyAutoConnect": "Auto connect",
+  "history": "History",
+  "game": "Game {index}",
+  "playersHistory": "Players: {players_length}",
+  "playerHistory": "Player {player_name}",
+  "track": "Tracks: {track_length}",
+  "createGame": "Create Game",
+  "addPlayers": "Add Players",
+  "selectPlaylist": "Select Playlist",
+  "startGame": "Start Game",
+  "save": "Save",
+  "close": "Close"
 }

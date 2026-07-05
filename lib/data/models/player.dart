@@ -2,8 +2,8 @@ import 'track.dart';
 
 class Player {
   // name is unique for every round
-  String _name;
-  List<Track> _tracks;
+  final String _name;
+  final List<Track> _tracks;
   int _amountToken;
 
   Player(this._name):

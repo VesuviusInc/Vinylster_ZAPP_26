@@ -39,4 +39,42 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get spotifyAutoConnect => 'Automatisch verbinden';
+
+  @override
+  String get history => 'Geschichte';
+
+  @override
+  String game(Object index) {
+    return 'Spiel $index';
+  }
+
+  @override
+  String playersHistory(Object players_length) {
+    return 'Spieler: $players_length';
+  }
+
+  @override
+  String playerHistory(Object player_name) {
+    return 'Spieler $player_name';
+  }
+
+  @override
+  String track(Object track_length) {
+    return 'Songs: $track_length';
+  }
+
+  @override
+  String get createGame => 'Spiel erstellen';
+
+  @override
+  String get addPlayers => 'Spieler hinzufügen';
+
+  @override
+  String get selectPlaylist => 'Playlist auswählen';
+
+  @override
+  String get save => 'Speichern';
+
+  @override
+  String get close => 'Schließen';
 }
