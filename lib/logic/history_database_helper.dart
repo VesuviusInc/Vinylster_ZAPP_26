@@ -12,18 +12,22 @@ class HistoryDatabaseHelper {
   HistoryDatabaseHelper._createInstance();
 
   factory HistoryDatabaseHelper() {
-    _historyDatabaseHelper ??= HistoryDatabaseHelper._createInstance();
+    if(_historyDatabaseHelper == null) {
+      _historyDatabaseHelper = HistoryDatabaseHelper._createInstance();
+    }
     return _historyDatabaseHelper!;
   }
 
   Future<Database> get database async {
-    _database ??= await initializeDatabase();
+    if (_database == null) {
+      _database = await initializeDatabase();
+    }
     return _database!;
   }
 
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = '${directory.path}gameHistory.db';
+    String path = directory.path + 'gameHistory.db';
     var historyDatabase = await openDatabase(path, version: 1, onCreate: _createTables);
     return historyDatabase;
   }
@@ -31,7 +35,7 @@ class HistoryDatabaseHelper {
   void _createTables(Database db, int newVersion) async {
     if(_database == null) {
       await db.execute(
-          'CREATE TABLE gamePlayerHistory(name TEXT, gameID TEXT, trackAmount INTEGER, tokenAmount INTEGER, PRIMARY KEY (name, gameID), FOREIGN KEY(gameID) REFERENCES gameHistory(gameID)))'
+          'CREATE TABLE gamePlayerHistory(name TEXT, gameID TEXT, trackAmount INTEGER, tokenAmount INTEGER, PRIMARY KEY (name, gameID))'
       );
       await db.execute(
           'CREATE TABLE gameHistory(gameID TEXT PRIMARY KEY, time TEXT, playerAmount INTEGER)'
